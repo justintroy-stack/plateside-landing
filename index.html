@@ -1,0 +1,608 @@
+<title>Plateside Early Access</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --enamel:#F2F2EF; --surface:#FFFFFF; --sunk:#E7E8E2; --hair:#E4E5DE;
+  --ink:#12150E; --ink-2:#4B5045; --ink-3:#7C8274;
+  --sprout-wash:#EAF6D2; --sprout-lit:#B6E44F; --sprout:#79B517; --sprout-deep:#4F7A0C; --sprout-ink:#3F6606;
+  --ember-wash:#FDE7E0;  --ember-lit:#FF8A6B;  --ember:#EE6B4D;  --ember-deep:#C0472A;  --ember-ink:#A33A20;
+  --frost-wash:#E1F0F7;  --frost-lit:#9FCFE6;  --frost:#4A9BC4;  --frost-deep:#2A7BA6;  --frost-ink:#1F5C80;
+  --clay-wash:#F0E8DA;   --clay-lit:#D9C7A8;   --clay:#A8875C;   --clay-deep:#8A6A3C;   --clay-ink:#6B5028;
+  --plum-wash:#F5E5EA;   --plum-lit:#D9AEBD;   --plum:#9C6B7E;   --plum-deep:#7E4A5D;   --plum-ink:#6A3A4C;
+  --on-lit:#12150E; --on-deep:#FFFFFF;
+  --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px; --r-pill:999px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px;
+  --gutter:16px; --gap:12px;
+  --lift-1:0 1px 2px rgba(18,21,14,.04), 0 6px 16px rgba(18,21,14,.05);
+  --lift-2:0 2px 6px rgba(18,21,14,.06), 0 18px 40px rgba(18,21,14,.10);
+  --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --d-press:120ms; --d-state:220ms; --d-enter:380ms; --d-hero:620ms;
+  --ez:cubic-bezier(.22,.72,.24,1); --ez-out:cubic-bezier(.16,1,.3,1);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  color-scheme:dark;
+  --enamel:#101210; --surface:#191C18; --sunk:#0B0D0A; --hair:#262A24;
+  --ink:#E9ECE4; --ink-2:#B0B6A9; --ink-3:#868D80;
+  --sprout-wash:#1C2609; --sprout-lit:#A9DB52; --sprout:#8AC72A; --sprout-deep:#6FA512; --sprout-ink:#BCE472;
+  --ember-wash:#2A1610;  --ember-lit:#FF9C80;  --ember:#F2795D;  --ember-deep:#DC5636;  --ember-ink:#FFA588;
+  --frost-wash:#0F2330;  --frost-lit:#8FC7E2;  --frost:#5FAAD0;  --frost-deep:#3E8FBA;  --frost-ink:#95CDE8;
+  --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
+  --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
+  --on-lit:#12150E; --on-deep:#0B0D0A;
+  --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
+  --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --enamel:#101210; --surface:#191C18; --sunk:#0B0D0A; --hair:#262A24;
+  --ink:#E9ECE4; --ink-2:#B0B6A9; --ink-3:#868D80;
+  --sprout-wash:#1C2609; --sprout-lit:#A9DB52; --sprout:#8AC72A; --sprout-deep:#6FA512; --sprout-ink:#BCE472;
+  --ember-wash:#2A1610;  --ember-lit:#FF9C80;  --ember:#F2795D;  --ember-deep:#DC5636;  --ember-ink:#FFA588;
+  --frost-wash:#0F2330;  --frost-lit:#8FC7E2;  --frost:#5FAAD0;  --frost-deep:#3E8FBA;  --frost-ink:#95CDE8;
+  --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
+  --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
+  --on-lit:#12150E; --on-deep:#0B0D0A;
+  --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
+  --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
+}
+[data-family="sprout"]{--wash:var(--sprout-wash);--lit:var(--sprout-lit);--core:var(--sprout);--deep:var(--sprout-deep);--fam-ink:var(--sprout-ink)}
+[data-family="ember"] {--wash:var(--ember-wash); --lit:var(--ember-lit); --core:var(--ember); --deep:var(--ember-deep); --fam-ink:var(--ember-ink)}
+[data-family="frost"] {--wash:var(--frost-wash); --lit:var(--frost-lit); --core:var(--frost); --deep:var(--frost-deep); --fam-ink:var(--frost-ink)}
+[data-family="clay"]  {--wash:var(--clay-wash);  --lit:var(--clay-lit);  --core:var(--clay);  --deep:var(--clay-deep);  --fam-ink:var(--clay-ink)}
+[data-family="plum"]  {--wash:var(--plum-wash);  --lit:var(--plum-lit);  --core:var(--plum);  --deep:var(--plum-deep);  --fam-ink:var(--plum-ink)}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--enamel);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,p{margin:0}
+::selection{background:var(--sprout-wash);color:var(--ink)}
+:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:5px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+.t-hero{font-size:clamp(38px,9vw,56px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance}
+.t-display{font-size:clamp(24px,4vw,30px);line-height:1.1;font-weight:720;letter-spacing:-.02em}
+.t-title{font-size:20px;line-height:1.2;font-weight:660;letter-spacing:-.015em}
+.t-body{font-size:15.5px;line-height:1.55}
+.t-note{font-size:13px;line-height:1.4;color:var(--ink-3)}
+.t-label{font-size:11px;line-height:1;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.mono{font-family:var(--mono)}
+
+.wrap{max-width:640px; margin:0 auto; padding:0 var(--gutter)}
+.stack{display:flex; flex-direction:column; gap:var(--gap)}
+.split{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--s3)}
+
+header{padding:28px 0 20px}
+header .wrap{display:flex; align-items:center; justify-content:space-between}
+.brand{font-weight:800; letter-spacing:.16em; font-size:13px}
+.status-pip{display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.status-pip::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
+
+main{padding-bottom:64px}
+main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
+
+.card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s5); box-shadow:var(--lift-1);
+  position:relative; overflow:hidden}
+.card--tint{background:var(--wash); box-shadow:none}
+.card--lit{background:var(--lit); color:var(--on-lit); box-shadow:var(--lift-2)}
+.card--solid{background:var(--ink); color:var(--enamel); box-shadow:var(--lift-2)}
+.card--lit .t-label{color:inherit; opacity:.6}
+.card--solid .t-label{color:inherit; opacity:.55}
+
+.motif{position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255,255,255,.55) 0 21%, transparent 21.5%),
+    radial-gradient(circle at 88% 12%, transparent 0 28%, rgba(255,255,255,.32) 28.5% 31%, transparent 31.5%),
+    radial-gradient(circle at 88% 12%, transparent 0 38%, rgba(255,255,255,.16) 38.5% 40%, transparent 40.5%)}
+.hero-in{position:relative; z-index:2}
+.hero-eyebrow{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--on-lit); opacity:.62}
+.hero-eyebrow .pip{width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
+.transit{display:flex; align-items:center; gap:10px; margin-top:var(--s5)}
+.tpill{display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 14px; border-radius:var(--r-pill);
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:500}
+.tpill.out{background:rgba(255,255,255,.5); color:var(--ember-deep)}
+.tpill.in{background:var(--ink); color:var(--sprout-lit)}
+.tpill i{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+.tarrow{color:var(--on-lit); opacity:.55; flex:none}
+.tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
+.hero p.lede{margin-top:var(--s4); font-size:16px; line-height:1.55; color:var(--on-lit); opacity:.82; max-width:46ch}
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; padding:0 26px;
+  border-radius:var(--r-pill); border:0; font-family:var(--sans); font-weight:700; font-size:15.5px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transition:transform var(--d-press) var(--ez), opacity var(--d-press) var(--ez)}
+.btn:active{transform:scale(.97)}
+.btn-ink{background:var(--ink); color:var(--enamel)}
+.btn-ink:hover{opacity:.9}
+.btn-onlit{background:var(--ink); color:var(--sprout-lit)}
+.btn-onlit:hover{opacity:.88}
+.btn-ghost{background:none; color:inherit; opacity:.72; text-decoration:underline; text-underline-offset:3px; height:auto; padding:0}
+.btn svg{width:16px; height:16px; stroke:currentColor; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round}
+.cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
+
+.chip{width:38px; height:38px; border-radius:var(--r-sm); background:var(--wash); color:var(--core);
+  display:grid; place-items:center; flex:none}
+.chip--onsolid{background:rgba(255,255,255,.14); color:var(--enamel)}
+.chip svg{width:19px; height:19px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round}
+
+.row{display:flex; align-items:flex-start; gap:var(--s4); padding:var(--s4) 0; width:100%}
+.row + .row{border-top:1px solid var(--hair)}
+.card--solid .row + .row{border-top-color:rgba(255,255,255,.12)}
+.row .rowtext{flex:1; min-width:0}
+.row .t-title{font-size:16px; font-weight:660}
+.row .t-note{margin-top:4px; color:var(--ink-2)}
+.card--solid .row .t-note{color:inherit; opacity:.7}
+
+.section-head{padding:0 var(--s2)}
+.section-head .t-label{margin-bottom:6px}
+.why-grid{display:grid; grid-template-columns:1fr; gap:var(--gap)}
+@media (min-width:600px){.why-grid{grid-template-columns:1fr 1fr}}
+.card--tint .t-label{color:var(--fam-ink); opacity:.85}
+.card--tint p{color:var(--ink); opacity:.9}
+.card--tint p + p{margin-top:8px}
+
+.num{font-weight:800; letter-spacing:-.03em; line-height:.92; font-variant-numeric:tabular-nums}
+.num--lg{font-size:44px}
+
+/* ---- the demo: flag chips, an example cycle, the swaps, the gate, the list */
+.flagpicker{display:flex; flex-wrap:wrap; gap:8px}
+.flagchip{position:relative; display:inline-flex}
+.flagchip input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer}
+.flagchip span{display:inline-flex; align-items:center; height:40px; padding:0 16px; border-radius:var(--r-pill);
+  background:var(--sunk); color:var(--ink-2); font-weight:600; font-size:14px;
+  transition:background-color var(--d-state) var(--ez), color var(--d-state) var(--ez)}
+.flagchip input:checked + span{background:var(--ink); color:var(--sprout-lit)}
+.flagchip input:focus-visible + span{outline:2px solid var(--ember); outline-offset:2px}
+
+.counts{font-size:12px; color:var(--ink-3); text-align:right; white-space:nowrap}
+.strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:var(--s3)}
+.plate{aspect-ratio:1; border-radius:var(--r-xs); background:var(--wash); display:grid; place-items:center; position:relative;
+  transition:background-color var(--d-state) var(--ez)}
+.plate i{width:10px; height:10px; border-radius:50%; background:var(--core); transition:background-color var(--d-state) var(--ez)}
+.plate.swapped{box-shadow:inset 0 0 0 2px var(--ink)}
+.plate.tonight{box-shadow:0 0 0 3px var(--enamel), 0 0 0 5px var(--ink)}
+.plate.tonight.swapped{box-shadow:inset 0 0 0 2px var(--ink), 0 0 0 3px var(--enamel), 0 0 0 5px var(--ink)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 14px; margin-top:var(--s3)}
+.legend span{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-3)}
+.legend i{width:8px; height:8px; border-radius:50%; background:var(--core)}
+.caps{display:flex; flex-wrap:wrap; gap:6px; margin-top:var(--s4)}
+.caps span{height:26px; display:inline-flex; align-items:center; padding:0 10px; border-radius:var(--r-pill);
+  background:var(--sunk); font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2)}
+#swaps{margin-top:var(--s2)}
+.swap{display:flex; gap:var(--s3); padding:var(--s3) 0; align-items:flex-start}
+.swap + .swap{border-top:1px solid var(--hair)}
+.swap .plate{width:34px; height:34px; flex:none; aspect-ratio:auto}
+.swap .rowtext{flex:1; min-width:0}
+.swap .t-title{font-size:16px}
+.swap .t-note{margin-top:3px; color:var(--ink-2)}
+.swap s{color:var(--ink-3); font-weight:500; text-decoration-color:var(--ink-3)}
+.empty{padding:var(--s4) 0 0; color:var(--ink-3)}
+.delta{display:flex; flex-direction:column; gap:10px; margin-top:var(--s3)}
+.deltarow{display:flex; gap:10px; align-items:flex-start}
+.deltarow .k{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); width:40px; flex:none; padding-top:6px}
+.pills{display:flex; flex-wrap:wrap; gap:6px}
+.pill{display:inline-flex; align-items:center; height:28px; padding:0 10px; border-radius:var(--r-pill); background:var(--sunk);
+  font-size:13px; font-weight:600; color:var(--ink-2)}
+.pill.less{text-decoration:line-through; text-decoration-color:var(--ink-3); color:var(--ink-3)}
+.pill.add{background:var(--sprout-wash); color:var(--sprout-ink)}
+.disclaimer{margin-top:var(--s2); padding:0 var(--s2)}
+
+form{margin-top:var(--s5); display:flex; flex-direction:column; gap:var(--s4); max-width:420px}
+.field label{display:block; margin-bottom:8px}
+input[type=email], select{
+  width:100%; font-family:var(--sans); font-size:16px; color:var(--ink); background:var(--sunk);
+  border:0; border-radius:var(--r-md); padding:14px 16px; -webkit-appearance:none; appearance:none;
+}
+input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outline-offset:1px}
+#saved{margin-top:var(--s4)}
+#saved .row:first-child{padding-top:0; border:0}
+#saved .note{margin-top:var(--s3); padding:12px 14px; border-radius:var(--r-md); background:var(--sunk); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
+#saved .note .addr{font-family:var(--mono); color:var(--ink)}
+
+footer{padding:var(--s7) 0 var(--s9)}
+footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
+</style>
+
+<header><div class="wrap">
+  <span class="brand">PLATESIDE</span>
+  <span class="status-pip">Not live yet</span>
+</div></header>
+
+<main><div class="wrap">
+
+  <section class="card card--lit" data-family="sprout" id="hero">
+    <div class="motif"></div>
+    <div class="hero-in">
+      <div class="hero-eyebrow"><span class="pip"></span>Early access</div>
+      <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
+      <div class="transit">
+        <span class="tpill out"><i></i>Outside target</span>
+        <span class="tarrow"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        <span class="tpill in"><i></i>In target</span>
+      </div>
+      <p class="lede">What to cook, what to buy, and when — sized to your goal, shaped by your blood work. Pick what's flagged on your panel below and watch an example cycle change. No email needed for that part.</p>
+      <div class="cta-row">
+        <button class="btn btn-onlit" id="ctaTop">Get early access
+          <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </button>
+        <a class="btn btn-ghost" href="#guide" style="color:var(--on-lit)">Try it first</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <div class="section-head"><p class="t-label">How it works</p><h2 class="t-display">Five steps, and the last one repeats.</h2></div>
+    <div class="card">
+      <div class="row">
+        <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M6 3h9l5 5v13H6z"/><path d="M9 14h6M9 17h4"/></svg></div>
+        <div class="rowtext"><p class="t-title">Add a lab report</p><p class="t-note">Or skip it and start from a weight goal alone. Nothing you upload ever leaves your phone.</p></div>
+      </div>
+      <div class="row">
+        <div class="chip" data-family="clay"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/></svg></div>
+        <div class="rowtext"><p class="t-title">It sets food targets</p><p class="t-note">From researched guideline targets, not a guess — each one with a source.</p></div>
+      </div>
+      <div class="row">
+        <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5M20 12a8 8 0 0 1-14 5"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></div>
+        <div class="rowtext"><p class="t-title">Builds a rotation</p><p class="t-note">From meals you'd actually cook, on the equipment you already own.</p></div>
+      </div>
+      <div class="row">
+        <div class="chip" data-family="clay"><svg viewBox="0 0 24 24"><path d="M4 8h16l-1.5 11a1 1 0 0 1-1 .9H6.5a1 1 0 0 1-1-.9L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg></div>
+        <div class="rowtext"><p class="t-title">Tracks your stock</p><p class="t-note">As you log meals, and tells you what to buy, at which store, and when.</p></div>
+      </div>
+      <div class="row">
+        <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-5h5"/></svg></div>
+        <div class="rowtext"><p class="t-title">Test again</p><p class="t-note">Dinner re-shapes itself, and a change waits for the food you already bought to run out first, so nothing is stranded.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stack" id="guide">
+    <div class="section-head"><p class="t-label">Try it — no email needed</p><h2 class="t-display">Log tonight. Then flag what's on your panel.</h2>
+      <p class="t-body" style="margin-top:8px; color:var(--ink-2)">This is the mechanism itself, run on an example kitchen: log a plate and stock ticks down toward a store run; pick a flag and future nights swap. Not your plan — nothing here leaves this page.</p>
+    </div>
+    <div class="card card--tint" data-family="sprout" id="tonightcard">
+      <div class="split">
+        <div>
+          <p class="mono" id="tonightMeta" style="font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)"></p>
+          <h3 class="t-title" id="tonightName" style="margin-top:6px; font-size:22px"></h3>
+          <p class="t-note" id="tonightUses" style="margin-top:4px"></p>
+        </div>
+        <button class="btn btn-ink" id="logBtn" style="height:44px; padding:0 20px; font-size:14px; flex:none">Log it</button>
+      </div>
+    </div>
+    <div class="card"><div class="flagpicker" id="flagpicker"></div></div>
+    <div class="card" id="cyclecard">
+      <div class="split"><p class="t-label">An example cycle · 14 dinners</p><p class="mono counts" id="counts"></p></div>
+      <div class="strip" id="strip"></div>
+      <div class="legend">
+        <span data-family="ember"><i></i>beef</span><span data-family="frost"><i></i>fish</span><span data-family="clay"><i></i>poultry</span><span data-family="plum"><i></i>pork</span><span data-family="sprout"><i></i>beans</span>
+      </div>
+      <div class="caps" id="caps"></div>
+      <div id="swaps"></div>
+    </div>
+    <div class="card" id="lowcard" hidden>
+      <p class="t-label">Running low, from logging</p>
+      <div class="pills" id="lowPills" style="margin-top:8px"></div>
+    </div>
+    <div class="card card--tint" data-family="frost" id="gatecard" hidden>
+      <div class="row" style="padding:0; border:0">
+        <div class="chip" data-family="frost"><svg viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
+        <div class="rowtext"><p class="t-label">The rule that makes it work</p><p class="t-body" id="gateline" style="margin-top:4px"></p></div>
+      </div>
+    </div>
+    <div class="card" id="listcard" hidden>
+      <p class="t-label">Next store run</p>
+      <div class="delta" id="delta"></div>
+    </div>
+    <div class="card card--tint" data-family="sprout" id="listcta" hidden>
+      <p class="t-body">That's the mechanism — cook, log, and labs move future nights. Want it running on your real kitchen? <a href="#signup" id="saveListLink" style="color:var(--sprout-ink); font-weight:700; text-decoration:underline">Join early access &rarr;</a></p>
+    </div>
+    <p class="t-note disclaimer">An example kitchen, not a prescription. The lab's own printed range and your own doctor come first, always — this shows what the app does with a flag, never a verdict on you.</p>
+  </section>
+
+  <section class="stack">
+    <div class="section-head"><p class="t-label">Why this exists</p><h2 class="t-display">"Eat better" isn't an instruction. It's a homework assignment with no due date.</h2></div>
+    <div class="why-grid">
+      <div class="card card--tint" data-family="ember">
+        <p class="t-label">The gap</p>
+        <p class="t-body">A panel comes back, something's flagged, and the plan is "watch your sugar" or "cut back on red meat." True, and useless at the grocery store — and the paid tools that promise something more personal often land in the same place. Nobody hands you the shopping list that goes with it.</p>
+      </div>
+      <div class="card card--tint" data-family="clay">
+        <p class="t-label">The cost</p>
+        <p class="t-body">You already paid for the blood work — a panel, a copay, sometimes hundreds out of pocket. The number is expensive. What it should change for dinner has been free advice, which is why it's usually vague.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card card--solid">
+    <div class="row" style="padding-top:0; border:0">
+      <div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg></div>
+      <div class="rowtext">
+        <p class="t-label">Your data</p>
+        <h2 class="t-display" style="margin-top:6px">Your results stay yours.</h2>
+      </div>
+    </div>
+    <p class="t-body" style="margin-top:var(--s3); opacity:.86">Nothing you type or upload ever leaves your phone — including a lab report. No account. No server. Whoever builds this can't see your results, because there's no place to see them from.</p>
+    <div style="margin-top:var(--s5)">
+      <div class="row"><div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M4.9 4.9 19.1 19.1M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No cloud, no telemetry, no third party</p></div></div>
+      <div class="row"><div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No login — your data lives on your device, not ours</p></div></div>
+      <div class="row"><div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M9 12.5 11 15l4.5-5"/><circle cx="12" cy="12" r="9"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">The lab's own printed range is always shown, never hidden behind a "score"</p></div></div>
+    </div>
+    <div class="row" style="align-items:baseline; border-top:1px solid rgba(255,255,255,.12); margin-top:var(--s2)">
+      <div class="rowtext">
+        <p class="num num--lg">289M<span style="font-size:18px; opacity:.6">+</span></p>
+        <p class="t-note" style="margin-top:6px; opacity:.7; max-width:40ch">people affected by US healthcare data breaches in 2024 alone. The only guaranteed way not to be one of them is data that was never collected — HIPAA Journal, 2024 breach report.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="signup">
+    <div id="askblock">
+      <p class="t-label">Join early access</p>
+      <h2 class="t-display" style="margin-top:6px">Get notified, and tell us what this is worth to you</h2>
+      <p class="t-body" style="margin-top:10px; color:var(--ink-2)">Plateside isn't public yet. What you just tried was an example kitchen — leave your email and we'll tell you the moment it can do that with your actual numbers. The price question is optional, and genuinely useful to us.</p>
+      <form id="accessForm">
+        <div class="field">
+          <label class="t-label" for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label class="t-label" for="price">What would you expect to pay for this? (optional)</label>
+          <select id="price" name="price">
+            <option value="">Prefer not to say</option>
+            <option value="free-only">Only if it's free</option>
+            <option value="under-5">Under $5/month</option>
+            <option value="5-10">$5–10/month</option>
+            <option value="10-15">$10–15/month</option>
+            <option value="more">More, if it genuinely worked</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-ink" style="align-self:flex-start">Get early access</button>
+      </form>
+    </div>
+    <div id="saved" hidden>
+      <div class="row">
+        <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7"/></svg></div>
+        <div class="rowtext"><p class="t-label">You're on the list</p><h2 class="t-display" style="margin-top:6px">We'll be in touch</h2></div>
+      </div>
+      <p class="t-body" id="savedRecap" style="margin-top:var(--s2); color:var(--ink-2)"></p>
+      <p class="note" id="savedNote"></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Plateside is not a diagnostic tool. It shows the number, the trend, the bounds, and the rule that fired — never an interpretation.</p>
+  </footer>
+
+</div></main>
+
+<script>
+(function(){
+  var SHEET_URL = '';   // set once the page is on real hosting; empty means the mail-draft fallback
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.getElementById('ctaTop').addEventListener('click', function(){
+    document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+    document.getElementById('email').focus({preventScroll:true});
+  });
+
+  var FAM = {beef:'ember', fish:'frost', poultry:'clay', pork:'plum', beans:'sprout'};
+  var ORDER = ['beef','fish','poultry','pork','beans'];
+  var CYCLE = [
+    {name:'Beef tacos', cls:'beef', stock:'ground beef'},
+    {name:'Salmon, lemon', cls:'fish', stock:'salmon'},
+    {name:'Chicken thighs', cls:'poultry', stock:'chicken thighs'},
+    {name:'Pork chops', cls:'pork', stock:'pork chops'},
+    {name:'Lentil stew', cls:'beans', stock:'lentils'},
+    {name:'Beef patties', cls:'beef', stock:'ground beef'},
+    {name:'Shrimp and rice', cls:'fish', stock:'shrimp'},
+    {name:'Chicken sausage, peppers', cls:'poultry', stock:'chicken sausage'},
+    {name:'Chuck roast', cls:'beef', stock:'chuck roast'},
+    {name:'Cod, potatoes', cls:'fish', stock:'cod'},
+    {name:'Black bean tacos', cls:'beans', stock:'black beans'},
+    {name:'Beef chili', cls:'beef', stock:'ground beef'},
+    {name:'Turkey meatballs', cls:'poultry', stock:'ground turkey'},
+    {name:'Ribeye', cls:'beef', stock:'ribeye'}
+  ];
+  var SUGAR = 'Added sugar is the lever, and it lives beside dinner, not in it: the granola bar leaves the snack pool, and nuts and an apple take the slot.';
+  var FLAGS = [
+    {id:'trig', label:'Triglycerides high', swaps:[], caps:['Added sugar ↓'], beside:SUGAR,
+      minus:['granola bars'], plus:['mixed nuts','apples']},
+    {id:'ldl', label:'LDL or ApoB high', why:'fewer red-meat nights this cycle, more fish',
+      swaps:[{slot:5, to:{name:'Salmon, dill', cls:'fish', stock:'salmon'}}, {slot:11, to:{name:'Cod, tomatoes', cls:'fish', stock:'cod'}}],
+      caps:['Saturated fat ↓'], minus:['ground beef'], plus:['salmon','cod']},
+    {id:'hdl', label:'HDL low', why:'more of the fats in fish, fewer red-meat nights',
+      swaps:[{slot:0, to:{name:'Fish tacos', cls:'fish', stock:'white fish'}}], caps:['Added sugar ↓'], beside:SUGAR,
+      minus:['ground beef','granola bars'], plus:['white fish','mixed nuts','apples']},
+    {id:'a1c', label:'A1c or glucose creeping up', why:'the fibre floor rises, so a bean night joins the cycle',
+      swaps:[{slot:3, to:{name:'Lentils, sweet potato', cls:'beans', stock:'lentils'}}], caps:['Added sugar ↓','Fibre floor ↑'], beside:SUGAR,
+      minus:['pork chops','granola bars'], plus:['lentils','sweet potatoes','mixed nuts','apples']},
+    {id:'bp', label:'Blood pressure high', why:'the fibre floor rises and the saturated-fat cap tightens',
+      swaps:[{slot:13, to:{name:'Chickpea and cauliflower curry', cls:'beans', stock:'chickpeas'}}], caps:['Saturated fat ↓','Fibre floor ↑'],
+      minus:['ribeye'], plus:['chickpeas','cauliflower']},
+    {id:'ferritin', label:'Ferritin flagged', swaps:[], caps:[],
+      note:'Charted, and moves nothing at dinner. It runs two ways — too low and too high both read "flagged" — and that is a conversation with your doctor first.'},
+    {id:'vitd', label:'Vitamin D low', swaps:[], caps:[],
+      note:'Charted, and moves nothing at dinner. Few foods carry much of it; this is a supplement question, not a swap.'},
+    {id:'urate', label:'Uric acid / gout', why:'purine-rich food leaves the cycle and beef nights cap at two',
+      swaps:[{slot:6, to:{name:'Chicken and rice', cls:'poultry', stock:'chicken thighs'}}, {slot:8, to:{name:'Cod, lemon', cls:'fish', stock:'cod'}},
+             {slot:11, to:{name:'Turkey chili', cls:'poultry', stock:'ground turkey'}}, {slot:13, to:{name:'Chicken thighs, lemon', cls:'poultry', stock:'chicken thighs'}}],
+      caps:['Beef nights ≤ 2'], minus:['shrimp','chuck roast','ground beef','ribeye'], plus:['chicken thighs','cod','ground turkey']}
+  ];
+  var STOCK = {'ground beef':3, 'salmon':1, 'chicken thighs':1, 'pork chops':1, 'lentils':1, 'shrimp':1,
+    'chicken sausage':1, 'chuck roast':1, 'cod':1, 'black beans':1, 'ground turkey':1, 'ribeye':1,
+    'white fish':1, 'chickpeas':1};
+  var LOW = [];
+  var cursor = 0, cycleNum = 1;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function list(a){ return a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; }
+
+  var picker = document.getElementById('flagpicker');
+  FLAGS.forEach(function(f){
+    var lab = document.createElement('label');
+    lab.className = 'flagchip';
+    lab.innerHTML = '<input type="checkbox" id="f-' + f.id + '" value="' + f.id + '"><span>' + esc(f.label) + '</span>';
+    picker.appendChild(lab);
+  });
+
+  function compute(){
+    var sel = FLAGS.filter(function(f){ return document.getElementById('f-' + f.id).checked; });
+    var rot = CYCLE.map(function(p){ return {name:p.name, cls:p.cls, stock:p.stock, from:null}; });
+    var r = {sel:sel, rot:rot, swaps:[], caps:[], besides:[], notes:[], minus:[], plus:[], gates:[], counts:{}};
+    sel.forEach(function(f){
+      f.swaps.forEach(function(s){
+        var p = rot[s.slot];
+        if (p.from) return;
+        var fromStock = p.stock;
+        r.swaps.push({from:p.name, to:s.to.name, cls:s.to.cls, why:f.label + ': ' + f.why + '.'});
+        if (r.gates.indexOf(fromStock) < 0) r.gates.push(fromStock);
+        p.from = p.name; p.name = s.to.name; p.cls = s.to.cls; p.stock = s.to.stock || fromStock;
+      });
+      f.caps.forEach(function(c){ if (r.caps.indexOf(c) < 0) r.caps.push(c); });
+      if (f.beside && r.besides.indexOf(f.beside) < 0) r.besides.push(f.beside);
+      if (f.note) r.notes.push({label:f.label, note:f.note});
+      (f.minus || []).forEach(function(m){ if (r.minus.indexOf(m) < 0) r.minus.push(m); });
+      (f.plus || []).forEach(function(m){ if (r.plus.indexOf(m) < 0) r.plus.push(m); });
+    });
+    rot.forEach(function(p){ r.counts[p.cls] = (r.counts[p.cls] || 0) + 1; });
+    return r;
+  }
+
+  var strip = document.getElementById('strip'), counts = document.getElementById('counts'), caps = document.getElementById('caps'),
+      swapsEl = document.getElementById('swaps'), gatecard = document.getElementById('gatecard'), gateline = document.getElementById('gateline'),
+      listcard = document.getElementById('listcard'), delta = document.getElementById('delta'),
+      listcta = document.getElementById('listcta'),
+      tonightcard = document.getElementById('tonightcard'), tonightMeta = document.getElementById('tonightMeta'),
+      tonightName = document.getElementById('tonightName'), tonightUses = document.getElementById('tonightUses'),
+      lowcard = document.getElementById('lowcard'), lowPills = document.getElementById('lowPills');
+  var lastR = null;
+
+  function render(){
+    var r = compute();
+    lastR = r;
+    strip.innerHTML = r.rot.map(function(p, idx){
+      return '<div class="plate' + (p.from ? ' swapped' : '') + (idx === cursor ? ' tonight' : '') + '" data-family="' + FAM[p.cls] + '" title="' + esc(p.name) + '"><i></i></div>';
+    }).join('');
+    counts.textContent = ORDER.filter(function(k){ return r.counts[k]; }).map(function(k){ return r.counts[k] + ' ' + k; }).join(' · ');
+
+    var tp = r.rot[cursor];
+    tonightcard.setAttribute('data-family', FAM[tp.cls]);
+    tonightMeta.textContent = 'Meal ' + (cursor + 1) + ' of 14 · cycle ' + cycleNum;
+    tonightName.textContent = tp.name;
+    tonightUses.textContent = 'Uses ' + tp.stock + ' — ' + (STOCK[tp.stock] || 0) + ' on hand';
+
+    lowPills.innerHTML = LOW.map(function(item){ return '<span class="pill less">' + esc(item) + '</span>'; }).join('');
+    lowcard.hidden = !LOW.length;
+    caps.innerHTML = r.caps.map(function(c){ return '<span>' + esc(c) + '</span>'; }).join('');
+    caps.hidden = !r.caps.length;
+
+    var html = '';
+    if (!r.sel.length){
+      html = '<p class="t-note empty">Pick a flag above and the cycle answers.</p>';
+    } else {
+      html += r.swaps.map(function(s){
+        return '<div class="swap"><div class="plate" data-family="' + FAM[s.cls] + '"><i></i></div><div class="rowtext">' +
+          '<p class="t-title"><s>' + esc(s.from) + '</s> becomes ' + esc(s.to) + '</p><p class="t-note">' + esc(s.why) + '</p></div></div>';
+      }).join('');
+      html += r.besides.map(function(b){
+        return '<div class="swap"><div class="plate" data-family="clay"><i></i></div><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
+      }).join('');
+      html += r.notes.map(function(n){
+        return '<div class="swap"><div class="plate" data-family="plum"><i></i></div><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
+      }).join('');
+    }
+    swapsEl.innerHTML = html;
+
+    if (r.gates.length){
+      gateline.textContent = 'Nothing changes until what is already in the freezer — the ' + list(r.gates) + ' — is eaten. The list stops buying it; the plate swaps the night it runs out. Nothing wasted.';
+      gatecard.hidden = false;
+    } else { gatecard.hidden = true; }
+
+    if (r.minus.length || r.plus.length){
+      delta.innerHTML =
+        (r.minus.length ? '<div class="deltarow"><span class="k">Less</span><span class="pills">' + r.minus.map(function(m){ return '<span class="pill less">' + esc(m) + '</span>'; }).join('') + '</span></div>' : '') +
+        (r.plus.length ? '<div class="deltarow"><span class="k">Add</span><span class="pills">' + r.plus.map(function(m){ return '<span class="pill add">' + esc(m) + '</span>'; }).join('') + '</span></div>' : '');
+      listcard.hidden = false;
+    } else { listcard.hidden = true; }
+
+    var loggedAny = (cursor !== 0 || cycleNum > 1);
+    listcta.hidden = !(r.sel.length || loggedAny);
+    return r;
+  }
+
+  picker.addEventListener('change', render);
+  render();
+
+  document.getElementById('logBtn').addEventListener('click', function(){
+    var p = lastR.rot[cursor];
+    if (STOCK[p.stock] === undefined) STOCK[p.stock] = 0;
+    if (STOCK[p.stock] > 0){
+      STOCK[p.stock] -= 1;
+      if (STOCK[p.stock] === 0 && LOW.indexOf(p.stock) < 0) LOW.push(p.stock);
+    }
+    cursor += 1;
+    if (cursor >= CYCLE.length){ cursor = 0; cycleNum += 1; }
+    render();
+  });
+
+  document.getElementById('saveListLink').addEventListener('click', function(){
+    setTimeout(function(){ document.getElementById('email').focus({preventScroll:true}); }, 400);
+  });
+
+  function recapText(r){
+    var bits = [];
+    var loggedAny = (cursor !== 0 || cycleNum > 1);
+    if (r.sel.length) bits.push(r.sel.length + (r.sel.length === 1 ? ' flag' : ' flags') + ' picked');
+    if (loggedAny) bits.push('meal ' + (cursor + 1) + ' of 14 logged');
+    return bits.length ? ('Based on what you tried: ' + bits.join(', ') + '.') : 'Based on the example kitchen you tried.';
+  }
+
+  function summaryText(r){
+    var lines = [];
+    lines.push('Logged: meal ' + (cursor + 1) + ' of 14, cycle ' + cycleNum);
+    if (LOW.length) lines.push('Running low from logging: ' + LOW.join(', '));
+    lines.push('Flags: ' + (r.sel.length ? r.sel.map(function(f){ return f.label; }).join(', ') : 'none picked'));
+    if (r.swaps.length) lines.push('Dinner: ' + r.swaps.map(function(s){ return s.from + ' -> ' + s.to; }).join('; '));
+    if (r.besides.length) lines.push('Beside dinner: the granola bar leaves the snack pool; nuts and an apple take the slot');
+    if (r.caps.length) lines.push('Targets: ' + r.caps.join(', '));
+    if (r.minus.length || r.plus.length) lines.push('Next store run - less: ' + (r.minus.join(', ') || 'nothing') + '; add: ' + (r.plus.join(', ') || 'nothing'));
+    return lines.join('\n');
+  }
+
+  document.getElementById('accessForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var r = compute();
+    var email = document.getElementById('email').value.trim();
+    var priceSel = document.getElementById('price');
+    var price = priceSel.options[priceSel.selectedIndex].text;
+    var summary = summaryText(r);
+
+    document.getElementById('savedRecap').textContent = recapText(r);
+
+    var note = document.getElementById('savedNote');
+    if (SHEET_URL){
+      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:price, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary})})
+        .then(function(){ note.textContent = 'We will reach out at ' + email + ' the moment Plateside can run this on your actual numbers.'; })
+        .catch(function(){ note.textContent = 'Something did not go through. Email ' + 'justintroy@gmail.com' + ' directly and we will add you by hand.'; });
+      note.textContent = 'Adding ' + email + '…';
+    } else {
+      var subject = encodeURIComponent('Plateside early access');
+      var body = encodeURIComponent('Email: ' + email + '\nWhat I\'d expect to pay: ' + price + '\n' + summary + '\n\n(sent from the early access page)');
+      window.location.href = 'mailto:justintroy@gmail.com?subject=' + subject + '&body=' + body;
+      note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will tell you the moment Plateside can run this on your actual numbers. Didn\'t open? Email <span class="addr">justintroy@gmail.com</span> directly.';
+    }
+    document.getElementById('askblock').hidden = true;
+    document.getElementById('saved').hidden = false;
+    document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+  });
+})();
+</script>
