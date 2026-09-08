@@ -559,18 +559,11 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     setTimeout(function(){ document.getElementById('email').focus({preventScroll:true}); }, 400);
   });
 
+  // Empty when nothing was picked or logged: the confirmation card sits well below the
+  // demo by the time anyone reaches the form (past "Why this exists" and "Your data"),
+  // and the email has no page around it at all, so a line that only means something
+  // beside the demo itself is dropped rather than shown out of context in either place.
   function recapText(r){
-    var bits = [];
-    var loggedAny = (cursor !== 0 || cycleNum > 1);
-    if (r.sel.length) bits.push(r.sel.length + (r.sel.length === 1 ? ' flag' : ' flags') + ' picked');
-    if (loggedAny) bits.push('meal ' + (cursor + 1) + ' of 14 logged');
-    return bits.length ? ('Based on what you tried: ' + bits.join(', ') + '.') : 'Based on the example kitchen you tried.';
-  }
-
-  // Same shape as recapText, for the email: the page's own fallback ("Based on the
-  // example kitchen you tried.") only makes sense beside the demo it refers to, so the
-  // email gets nothing instead of a sentence that means nothing once it leaves the page.
-  function emailRecapText(r){
     var bits = [];
     var loggedAny = (cursor !== 0 || cycleNum > 1);
     if (r.sel.length) bits.push(r.sel.length + (r.sel.length === 1 ? ' flag' : ' flags') + ' picked');
@@ -598,11 +591,14 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     var price = priceSel.options[priceSel.selectedIndex].text;
     var summary = summaryText(r);
 
-    document.getElementById('savedRecap').textContent = recapText(r);
+    var recap = recapText(r);
+    var recapEl = document.getElementById('savedRecap');
+    recapEl.textContent = recap;
+    recapEl.hidden = !recap;
 
     var note = document.getElementById('savedNote');
     if (SHEET_URL){
-      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:price, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:emailRecapText(r)})})
+      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:price, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
         .then(function(){ note.textContent = 'We will reach out at ' + email + ' the moment Plateside can run this on your actual numbers.'; })
         .catch(function(){ note.innerHTML = 'Something did not go through. <a href="mailto:hello@plateside.app">Contact us</a> and we will add you by hand.'; });
       note.textContent = 'Adding ' + email + '…';
