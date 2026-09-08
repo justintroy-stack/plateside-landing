@@ -593,13 +593,13 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     if (SHEET_URL){
       fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:price, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary})})
         .then(function(){ note.textContent = 'We will reach out at ' + email + ' the moment Plateside can run this on your actual numbers.'; })
-        .catch(function(){ note.textContent = 'Something did not go through. Email ' + 'justintroy@gmail.com' + ' directly and we will add you by hand.'; });
+        .catch(function(){ note.innerHTML = 'Something did not go through. <a href="mailto:justintroy@gmail.com">Contact us</a> and we will add you by hand.'; });
       note.textContent = 'Adding ' + email + '…';
     } else {
       var subject = encodeURIComponent('Plateside early access');
       var body = encodeURIComponent('Email: ' + email + '\nWhat I\'d expect to pay: ' + price + '\n' + summary + '\n\n(sent from the early access page)');
       window.location.href = 'mailto:justintroy@gmail.com?subject=' + subject + '&body=' + body;
-      note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will tell you the moment Plateside can run this on your actual numbers. Didn\'t open? Email <span class="addr">justintroy@gmail.com</span> directly.';
+      note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will tell you the moment Plateside can run this on your actual numbers. Didn\'t open? <a href="mailto:justintroy@gmail.com">Contact us</a> directly.';
     }
     document.getElementById('askblock').hidden = true;
     document.getElementById('saved').hidden = false;
