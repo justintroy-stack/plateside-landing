@@ -77,7 +77,7 @@ h1,h2,h3,p{margin:0}
 
 .wrap{max-width:640px; margin:0 auto; padding:0 var(--gutter)}
 .stack{display:flex; flex-direction:column; gap:var(--gap)}
-.split{display:flex; align-items:flex-start; justify-content:space-between; gap:var(--s3)}
+.split{display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:var(--s2) var(--s3)}
 
 header{padding:28px 0 20px}
 header .wrap{display:flex; align-items:center; justify-content:space-between}
@@ -163,7 +163,7 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .flagchip input:checked + span{background:var(--ink); color:var(--sprout-lit)}
 .flagchip input:focus-visible + span{outline:2px solid var(--ember); outline-offset:2px}
 
-.counts{font-size:12px; color:var(--ink-3); text-align:right; white-space:nowrap}
+.counts{font-size:12px; color:var(--ink-3); text-align:right}
 .strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:var(--s3)}
 .plate{aspect-ratio:1; border-radius:var(--r-xs); background:var(--wash); display:grid; place-items:center; position:relative;
   transition:background-color var(--d-state) var(--ez)}
