@@ -28,8 +28,8 @@
   /* cast shadows: a shade on the light ground, a soft spill of light on the dark one */
   --shade:#12150E;
   --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px; --r-pill:999px;
-  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px;
-  --gutter:16px; --gap:12px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px; --s10:96px;
+  --gutter:16px; --gap:12px; --pad:var(--gutter);
   --lift-1:0 1px 2px rgba(18,21,14,.04), 0 6px 16px rgba(18,21,14,.05);
   --lift-2:0 2px 6px rgba(18,21,14,.06), 0 18px 40px rgba(18,21,14,.10);
   --lift-3:0 8px 20px rgba(18,21,14,.10), 0 34px 70px rgba(18,21,14,.18);
@@ -107,7 +107,7 @@ h1,h2,h3,p{margin:0}
 .num--lg{font-size:44px}
 .num--md{font-size:26px}
 
-.wrap{max-width:640px; margin:0 auto; padding:0 var(--gutter)}
+.wrap{max-width:640px; margin:0 auto; padding:0 var(--pad)}
 .stack{display:flex; flex-direction:column; gap:var(--gap)}
 .split{display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:var(--s2) var(--s3)}
 
@@ -120,10 +120,11 @@ header .wrap{display:flex; align-items:center; justify-content:space-between}
 
 main{padding-bottom:64px}
 main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var(--s7)}
+main > .band + .wrap{padding-top:0}
 
 /* ---------- the hero: a subject on the field, not a box ------------------------------ */
 .hero{overflow:clip; position:relative; padding:0 0 var(--s4)}
-.hero-in{max-width:640px; margin:0 auto; padding:0 var(--gutter); position:relative}
+.hero-in{max-width:640px; margin:0 auto; padding:0 var(--pad); position:relative}
 /* Sized so the headline's first line sits well above the fold on a phone: the plate is the
    opener, not the whole screen. The copy overlaps the plate's shadow tail for depth. */
 .hero-art{position:relative; width:min(86vw,400px); margin:-8px -12vw 0 auto; z-index:1;
@@ -148,20 +149,6 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .tarrow{color:var(--ink-3); flex:none}
 .tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
 .hero p.lede{margin-top:var(--s4); font-size:16.5px; line-height:1.55; color:var(--ink-2); max-width:46ch}
-@media (min-width:800px){
-  /* The art still gets more room than the reading column below -- that part was always the
-     point. hero-copy's own left edge matches where .wrap's CONTENT actually starts: .wrap's own
-     box sits at (50vw - 320px), same as here, but .wrap then has var(--gutter) of its own left
-     padding before anything inside it renders -- the first fix compared hero-copy to .wrap's
-     outer box and missed that inner offset, leaving a real, visible 16px gap (his own screenshot
-     caught it). This is +var(--gutter) on top of the same formula, verified this time against an
-     actual child of .wrap (#tonightcard), not against .wrap's own box. hero-copy's max-width caps
-     how wide the headline column can get on very large screens now it isn't clamped to 1040px. */
-  .hero-in{max-width:none; margin:0; padding-left:calc(50vw - 320px + var(--gutter)); padding-right:var(--gutter);
-    display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:var(--s7); padding-top:var(--s7)}
-  .hero-art{width:min(46vw,520px); margin:0 -6vw 0 auto; grid-column:2}
-  .hero-copy{max-width:520px; grid-column:1; grid-row:1; margin-top:0}
-}
 
 /* Entrance: the plate settles onto the counter first, the words read in after it. Pure CSS so
    it runs before the script, and the global reduced-motion rule collapses it to nothing. */
@@ -200,10 +187,10 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .card--tint{background:var(--wash); box-shadow:none}
 .card--solid{background:var(--ink); color:var(--enamel); box-shadow:var(--lift-2)}
 .card--solid .t-label{color:inherit; opacity:.55}
-/* The one card that gets physically bigger than the column: edge to edge below 800px (reaches
-   the true screen edge, never past it), 80px past the column above it. */
-#yourdata{border-radius:var(--r-xl); margin-left:calc(-1 * var(--gutter)); margin-right:calc(-1 * var(--gutter))}
-@media (min-width:800px){ #yourdata{margin-left:-96px; margin-right:-96px} }
+/* Your data: a band across the whole page rather than a card in the column, with its own .wrap
+   inside so its content sits on the same axis as everything else. Edge to edge at every width. */
+.band{border-radius:var(--r-xl); margin:var(--s8) 0; padding:var(--s5) 0}
+.band > .wrap{padding-top:0; padding-bottom:0}
 
 .chip{width:46px; height:46px; border-radius:var(--r-md); background:var(--wash); color:var(--core);
   display:grid; place-items:center; flex:none}
@@ -263,8 +250,12 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .mp--lg{width:104px}
 .mp--sm{width:34px; flex:none}
 .tonight{display:grid; grid-template-columns:auto 1fr; gap:var(--s4); align-items:center}
-.tonight-art{width:96px; flex:none}
+.tonight-art{width:104px; flex:none}
 .tonight-copy{min-width:0}
+.tonight-meta{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.tonight-name{margin-top:6px; font-size:22px}
+.tonight-uses{margin-top:4px}
+.demo-inputs, .demo-answers{display:flex; flex-direction:column; gap:var(--gap)}
 .tonight .btn{grid-column:1 / -1; justify-self:end; height:44px; padding:0 22px; font-size:14px}
 #cyclecard{padding:var(--s6)}
 .counts{font-size:12px; color:var(--ink-3); text-align:right}
@@ -312,6 +303,71 @@ input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outl
 footer{padding:var(--s7) 0 var(--s9)}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:10px}
+/* ---------- desktop (>=900px): the page uses the width ---------------------------------
+   One container (up to 1720px, padding that scales with the viewport) for the header, the hero,
+   every section, the band and the footer, so everything shares one left edge at every width.
+   The hero is copy left / the whole plate right; the steps are three across with two centred
+   beneath; the demo's two things-you-can-do sit side by side over a full-width shelf of all
+   fourteen plates; the statement sits beside its two answers; Your data is a band; the ask sits
+   beside its form. Below 900px nothing here applies and the phone layout stands untouched. */
+@media (min-width:900px){
+  :root{--pad:clamp(32px, 5vw, 96px)}
+  .wrap, .hero-in{max-width:1720px}
+  main > .wrap{gap:var(--s10); padding-top:var(--s9)}
+  header{padding:32px 0 8px}
+  .brand{font-size:14px}
+  section.stack{gap:var(--s6)}
+  .stack > .section-head{margin-bottom:var(--s3)}
+  .t-display{font-size:38px}
+  .t-statement{font-size:clamp(40px, 3.4vw, 56px)}
+  .t-body{font-size:16.5px}
+  .section-head .t-display{max-width:22ch}
+  .section-head > p.t-body{max-width:62ch}
+
+  .hero{padding:var(--s5) 0 var(--s8)}
+  .hero-in{margin:0 auto; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); align-items:center; gap:clamp(32px, 5vw, 96px)}
+  .hero-copy{grid-column:1; grid-row:1; margin-top:0; max-width:640px}
+  .hero-art{grid-column:2; width:100%; max-width:760px; margin:0; justify-self:end; filter:drop-shadow(0 34px 48px rgba(18,21,14,.14))}
+  .t-hero{font-size:clamp(48px, 5.3vw, 80px)}
+  .hero p.lede{font-size:18px; max-width:44ch}
+
+  .steps{display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:var(--s8) var(--s7); margin-top:0}
+  .steps li{grid-column:span 2; flex-direction:column; gap:var(--s4)}
+  .steps li:nth-child(4){grid-column:2 / span 2}
+  .steps li:nth-child(5){grid-column:4 / span 2}
+  .chip{width:52px; height:52px}
+  .steps .t-title{font-size:19px}
+  .steps .t-note{font-size:15.5px}
+
+  .demo-inputs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--s6); align-items:start}
+  #flagblock{padding-top:var(--s2)}
+  .flagchip span{height:44px; padding:0 18px; font-size:15px}
+  .card{padding:var(--s7)}
+  .tonight{gap:var(--s5)}
+  .tonight-art, .mp--lg{width:136px}
+  .tonight-name{font-size:26px}
+  .tonight .btn{height:48px}
+  #cyclecard{padding:var(--s7)}
+  .strip{grid-template-columns:repeat(14, minmax(0,1fr)); gap:8px}
+  .plate{width:100%; max-width:92px; margin:0 auto}
+  .mp--sm{width:44px}
+  .demo-answers{display:flex; flex-wrap:wrap; gap:var(--s6)}
+  .demo-answers > .card{flex:1 1 320px}
+  #listcta{flex-basis:100%}
+  .disclaimer{max-width:80ch}
+
+  #why{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr); gap:var(--s8); align-items:start}
+  #why .section-head .t-statement{max-width:16ch}
+  .why{display:contents}
+
+  .band{border-radius:0; padding:var(--s9) 0; margin:var(--s10) 0}
+  .band > .wrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--s9); align-items:start}
+  .band-proof > div:first-child{margin-top:0 !important}
+
+  #askblock{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--s9); align-items:start}
+  #accessForm{margin-top:0; max-width:520px}
+  footer p{max-width:72ch}
+}
 </style>
 
 <!-- the drawn plate: one base and five marks, coloured by whatever data-family the svg element carries -->
@@ -475,15 +531,17 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     <div class="section-head"><p class="t-label">Try it — no email needed</p><h2 class="t-display">Log tonight. Watch the kitchen react.</h2>
       <p class="t-body" style="margin-top:8px; color:var(--ink-2)">This is the real mechanism, run on an example kitchen. Log a plate and watch the stock count down toward a store run. Then flag what's on a lab panel and watch future nights swap too. Not your plan — nothing here leaves this page.</p>
     </div>
+    <div class="demo-inputs">
+    <div class="stack" id="logblock">
     <div class="card card--tint" data-family="ember" id="tonightcard">
       <div class="tonight">
         <div class="tonight-art" id="tonightArt">
           <svg class="mp mp--lg" id="tonightPlate" data-family="ember" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/><use href="#mark-beef" id="tonightMark"/></svg>
         </div>
         <div class="tonight-copy" id="tonightCopy">
-          <p class="mono" id="tonightMeta" style="font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)"></p>
-          <h3 class="t-title" id="tonightName" style="margin-top:6px; font-size:22px"></h3>
-          <p class="t-note" id="tonightUses" style="margin-top:4px"></p>
+          <p class="tonight-meta" id="tonightMeta"></p>
+          <h3 class="t-title tonight-name" id="tonightName"></h3>
+          <p class="t-note tonight-uses" id="tonightUses"></p>
         </div>
         <button class="btn btn-ink" id="logBtn">Log it</button>
       </div>
@@ -493,9 +551,11 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <p class="t-body" style="margin-top:4px">Keep tapping Log it and this fills in — exactly what a real store run needs, no flag required.</p>
       <div class="pills" id="lowPills" style="margin-top:10px"></div>
     </div>
+    </div>
     <div id="flagblock">
       <p class="t-label" style="padding:var(--s2) 0 0">Flag what's on your panel</p>
       <div class="flagpicker" id="flagpicker" style="margin-top:10px"></div>
+    </div>
     </div>
     <div class="card" id="cyclecard">
       <div class="split">
@@ -509,6 +569,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <div class="caps" id="caps"></div>
       <div id="swaps"></div>
     </div>
+    <div class="demo-answers">
     <div class="card card--tint" data-family="frost" id="gatecard" hidden>
       <div class="row" style="padding:0; border:0">
         <div class="chip" data-family="frost"><svg viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
@@ -522,10 +583,11 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     <div class="card card--tint" data-family="sprout" id="listcta" hidden>
       <p class="t-body">That's the mechanism — cook, log, and the plan reacts, sharper still with a lab flag. Want it running on your real kitchen? <a href="#signup" id="saveListLink" style="color:var(--sprout-ink); font-weight:700; text-decoration:underline">Join early access &rarr;</a></p>
     </div>
+    </div>
     <p class="t-note disclaimer">An example kitchen, not a prescription. The lab's own printed range and your own doctor come first, always — this shows what the app does with a flag, never a verdict on you.</p>
   </section>
 
-  <section class="stack">
+  <section class="stack" id="why">
     <div class="section-head"><p class="t-label">Why this exists</p><h2 class="t-statement">"Eat better" isn't an instruction. It's a homework assignment with no due date.</h2></div>
     <div class="why">
       <div class="why-item" data-family="ember">
@@ -539,7 +601,11 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     </div>
   </section>
 
-  <section class="card card--solid" id="yourdata">
+  </div>
+
+  <section class="card card--solid band" id="yourdata">
+    <div class="wrap">
+      <div class="band-copy">
     <div class="row" style="padding-top:0; border:0">
       <div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg></div>
       <div class="rowtext">
@@ -548,6 +614,8 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       </div>
     </div>
     <p class="t-body" style="margin-top:var(--s3); opacity:.86">Nothing you type or upload ever leaves your phone — including a lab report. No account. No server. Whoever builds this can't see your results, because there's no place to see them from.</p>
+      </div>
+      <div class="band-proof">
     <div style="margin-top:var(--s5)">
       <div class="row"><div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M4.9 4.9 19.1 19.1M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No cloud, no telemetry, no third party</p></div></div>
       <div class="row"><div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No login — your data lives on your device, not ours</p></div></div>
@@ -559,13 +627,18 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
         <p class="t-note" style="margin-top:6px; opacity:.7; max-width:40ch">people affected by US healthcare data breaches in 2024 alone. The only guaranteed way not to be one of them is data that was never collected — HIPAA Journal, 2024 breach report.</p>
       </div>
     </div>
+      </div>
+    </div>
   </section>
 
+  <div class="wrap">
   <section class="card" id="signup">
     <div id="askblock">
+      <div class="signup-copy">
       <p class="t-label">Join early access</p>
       <h2 class="t-display" style="margin-top:6px">Get notified, and tell us what this is worth to you</h2>
       <p class="t-body" style="margin-top:10px; color:var(--ink-2)">Plateside isn't public yet. What you just tried was an example kitchen — leave your email and we'll tell you the moment it can do that with your actual numbers. The price question is optional, and genuinely useful to us.</p>
+      </div>
       <form id="accessForm">
         <div class="field">
           <label class="t-label" for="email">Email</label>
@@ -608,7 +681,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '27';
+  var BUILD = '28';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -634,7 +707,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     reveal('#howitworks li', 70);
     reveal('#tonightcard, #flagblock, #cyclecard', 90);
     reveal('.why-item', 100);
-    reveal('#yourdata, #signup', 0);
+    reveal('#yourdata > .wrap, #signup', 0);
   }
 
   // The plate drifts and turns a few degrees as the page scrolls -- eased toward its target each
