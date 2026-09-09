@@ -218,18 +218,22 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .row .t-note{margin-top:4px; color:var(--ink-2)}
 .card--solid .row .t-note{color:inherit; opacity:.7}
 
-.section-head{padding:0 var(--s2)}
+/* One left axis for the whole page: the header brand, the hero copy, every section heading,
+   every card edge and the footer all start at .wrap's content edge. Field text used to carry an
+   extra 8px inset (a third axis that aligned with nothing but itself); on desktop that read as
+   the hero and "How it works" being staggered. Rows under a heading are flush too. */
+.section-head{padding:0}
 .section-head .t-label{margin-bottom:6px}
 
 /* Steps: on the field, no box, no dividers -- spacing does the separating. */
-.steps{list-style:none; margin:var(--s2) 0 0; padding:0 var(--s2); display:flex; flex-direction:column; gap:var(--s5)}
+.steps{list-style:none; margin:var(--s2) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--s5)}
 .steps li{display:flex; gap:var(--s4); align-items:flex-start}
 .steps .rowtext{flex:1; min-width:0}
 .steps .t-title{font-size:17px; font-weight:680}
 .steps .t-note{margin-top:4px; color:var(--ink-2); font-size:14.5px}
 
 /* Why: a statement and two short answers, on the field. */
-.why{display:grid; grid-template-columns:1fr; gap:var(--s5); padding:0 var(--s2); margin-top:var(--s5)}
+.why{display:grid; grid-template-columns:1fr; gap:var(--s5); padding:0; margin-top:var(--s5)}
 @media (min-width:600px){.why{grid-template-columns:1fr 1fr; gap:var(--s7)}}
 .why-item .t-label{color:var(--fam-ink)}
 .why-item p.t-body{margin-top:8px; color:var(--ink-2)}
@@ -244,7 +248,7 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .settle-in--spring{animation:settleIn var(--d-enter) var(--ez-spring) both}
 
 /* ---------- the demo ------------------------------------------------------------------- */
-.flagpicker{display:flex; flex-wrap:wrap; gap:8px; padding:0 var(--s2)}
+.flagpicker{display:flex; flex-wrap:wrap; gap:8px; padding:0}
 .flagchip{position:relative; display:inline-flex}
 .flagchip input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer}
 .flagchip span{display:inline-flex; align-items:center; height:40px; padding:0 16px; border-radius:var(--r-pill);
@@ -292,7 +296,7 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
   font-size:13px; font-weight:600; color:var(--ink-2)}
 .pill.less{text-decoration:line-through; text-decoration-color:var(--ink-3); color:var(--ink-3)}
 .pill.add{background:var(--sprout-wash); color:var(--sprout-ink)}
-.disclaimer{margin-top:var(--s2); padding:0 var(--s2)}
+.disclaimer{margin-top:var(--s2); padding:0}
 
 form{margin-top:var(--s5); display:flex; flex-direction:column; gap:var(--s4); max-width:420px}
 .field label{display:block; margin-bottom:8px}
@@ -490,7 +494,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <div class="pills" id="lowPills" style="margin-top:10px"></div>
     </div>
     <div id="flagblock">
-      <p class="t-label" style="padding:var(--s2) var(--s2) 0">Flag what's on your panel</p>
+      <p class="t-label" style="padding:var(--s2) 0 0">Flag what's on your panel</p>
       <div class="flagpicker" id="flagpicker" style="margin-top:10px"></div>
     </div>
     <div class="card" id="cyclecard">
@@ -604,7 +608,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '26';
+  var BUILD = '27';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
