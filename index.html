@@ -300,8 +300,7 @@ input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outl
 
 footer{padding:var(--s7) 0 var(--s9)}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
-footer .foot-row{display:flex; justify-content:space-between; align-items:baseline; gap:var(--s4); margin-top:10px}
-footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--ink-3); opacity:.7}
+footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:10px}
 </style>
 
 <!-- the drawn plate: one base and five marks, coloured by whatever data-family the svg element carries -->
@@ -587,7 +586,7 @@ footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; col
 
   <footer>
     <p>Plateside is not a diagnostic tool. It shows the number, the trend, the bounds, and the rule that fired — never an interpretation.</p>
-    <div class="foot-row"><a href="/privacy.html" style="color:var(--ink-3); font-size:13px">Privacy Policy</a><span class="build" id="build"></span></div>
+    <div class="foot-row"><a href="/privacy.html" style="color:var(--ink-3); font-size:13px">Privacy Policy</a></div>
   </footer>
 
   </div>
@@ -595,8 +594,10 @@ footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; col
 
 <script>
 (function(){
-  var BUILD = '23';
-  document.getElementById('build').textContent = 'build ' + BUILD;
+  // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
+  // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
+  // and reading this line, not by looking at the page.
+  var BUILD = '24';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
