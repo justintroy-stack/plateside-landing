@@ -149,11 +149,17 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 .tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
 .hero p.lede{margin-top:var(--s4); font-size:16.5px; line-height:1.55; color:var(--ink-2); max-width:46ch}
 @media (min-width:800px){
-  /* Wider than the rest of the page on purpose: the opener gets the room, the reading column
-     below stays at 640. Copy gets ~460px so the headline breaks in three lines, not five. */
-  .hero-in{max-width:1040px; display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:var(--s7); padding-top:var(--s7)}
+  /* The art still gets more room than the reading column below -- that part was always the
+     point. But hero-copy's own left edge now uses .wrap's exact formula (50vw minus half its
+     640px max-width), not an independent max-width+auto-center. Measured the old version at a
+     real desktop width (1440px): hero copy started 200px left of everything below it, so the
+     whole page visibly lurched sideways on the very first scroll -- a real, measured jump, not
+     a guess. hero-copy's own max-width caps how wide the headline column can get on very large
+     screens now that its container isn't clamped to 1040px anymore. */
+  .hero-in{max-width:none; margin:0; padding-left:calc(50vw - 320px); padding-right:var(--gutter);
+    display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:var(--s7); padding-top:var(--s7)}
   .hero-art{width:min(46vw,520px); margin:0 -6vw 0 auto; grid-column:2}
-  .hero-copy{grid-column:1; grid-row:1; margin-top:0}
+  .hero-copy{max-width:520px; grid-column:1; grid-row:1; margin-top:0}
 }
 
 /* Entrance: the plate settles onto the counter first, the words read in after it. Pure CSS so
@@ -597,7 +603,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '24';
+  var BUILD = '25';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
