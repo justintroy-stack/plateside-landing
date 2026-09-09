@@ -434,16 +434,19 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
   // script fails to run for any reason, every section is just normally visible, nothing is
   // ever stuck hidden waiting on JS. Skipped entirely under reduced motion, same as the hero.
   // Genuinely dynamic: toggles .in both ways on intersection, never unobserves, so it fades
-  // out scrolling past and re-plays scrolling back, rather than a one-time entrance. The
-  // positive bottom margin expands the trigger zone downward, so a reveal starts while the
-  // content is still just below the fold and has time to land before it's actually looked at,
-  // instead of firing once it's already mostly in view and looking like it's chasing the scroll.
+  // out scrolling past and re-plays scrolling back. A first attempt at this expanded the
+  // bottom margin to give reveals lead time on the way down, but rootMargin isn't direction-
+  // aware -- the same expansion also delays the un-reveal on the way back up by the same
+  // amount, which is exactly the "stays appeared" bug. Plain 0px margin instead: symmetric in
+  // both directions, correct un-reveal right at the true edge; the "not rushed" feeling comes
+  // from --d-hero's longer duration and the low threshold catching it early in its scroll into
+  // view, not from an artificial pre-trigger zone.
   if (!reduced && 'IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         entry.target.classList.toggle('in', entry.isIntersecting);
       });
-    }, {threshold:0.1, rootMargin:'0px 0px 120px 0px'});
+    }, {threshold:0.1});
     function reveal(selector, staggerMs){
       document.querySelectorAll(selector).forEach(function(el, i){
         el.classList.add('reveal');
