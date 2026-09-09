@@ -23,7 +23,7 @@
   --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
   --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   --d-press:120ms; --d-state:220ms; --d-enter:380ms; --d-hero:620ms;
-  --ez:cubic-bezier(.22,.72,.24,1); --ez-out:cubic-bezier(.16,1,.3,1);
+  --ez:cubic-bezier(.22,.72,.24,1); --ez-out:cubic-bezier(.16,1,.3,1); --ez-spring:cubic-bezier(.34,1.42,.5,1);
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   color-scheme:dark;
@@ -116,6 +116,16 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
 .hero p.lede{margin-top:var(--s4); font-size:16px; line-height:1.55; color:var(--on-lit); opacity:.82; max-width:46ch}
 
+/* Staged hero entrance, pure CSS so it runs even before the script executes. Reduced motion
+   is already handled globally (line ~66): duration collapses to .01ms, so content still lands
+   in its final state immediately, nothing stays hidden. */
+@keyframes fadeRise{from{opacity:0; transform:translateY(16px)}}
+#hero .hero-eyebrow{animation:fadeRise var(--d-hero) var(--ez-out) both}
+#hero .t-hero{animation:fadeRise var(--d-hero) var(--ez-out) 70ms both}
+#hero .transit{animation:fadeRise var(--d-hero) var(--ez-out) 140ms both}
+#hero p.lede{animation:fadeRise var(--d-hero) var(--ez-out) 210ms both}
+#hero .cta-row{animation:fadeRise var(--d-hero) var(--ez-out) 280ms both}
+
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; padding:0 26px;
   border-radius:var(--r-pill); border:0; font-family:var(--sans); font-weight:700; font-size:15.5px;
   cursor:pointer; -webkit-tap-highlight-color:transparent;
@@ -144,6 +154,22 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 
 .section-head{padding:0 var(--s2)}
 .section-head .t-label{margin-bottom:6px}
+
+/* Scroll reveal: JS adds .reveal at setup time (never present in the static markup), so a
+   page with JS unavailable never has hidden content -- it just skips the entrance and shows
+   everything normally. .in is added on intersection. 16px keeps the offset inside a .card's
+   own padding (var(--s5), 20px) so nothing clips against the card's overflow:hidden while
+   settling into place. */
+.reveal{opacity:0; transform:translateY(16px);
+  transition:opacity var(--d-enter) var(--ez-out), transform var(--d-enter) var(--ez-out)}
+.reveal.in{opacity:1; transform:translateY(0)}
+
+/* Settle-in: for a card that appears because of what you just did (logged a meal, picked a
+   flag), not because you scrolled to it -- smaller offset, quicker, so it reads as a direct
+   answer to the action rather than the same weight as a first-scroll reveal. */
+@keyframes settleIn{from{opacity:0; transform:translateY(-10px)}}
+.settle-in{animation:settleIn var(--d-enter) var(--ez-out) both}
+.settle-in--spring{animation:settleIn var(--d-enter) var(--ez-spring) both}
 .why-grid{display:grid; grid-template-columns:1fr; gap:var(--gap)}
 @media (min-width:600px){.why-grid{grid-template-columns:1fr 1fr}}
 .card--tint .t-label{color:var(--fam-ink); opacity:.85}
@@ -159,7 +185,8 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .flagchip input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer}
 .flagchip span{display:inline-flex; align-items:center; height:40px; padding:0 16px; border-radius:var(--r-pill);
   background:var(--sunk); color:var(--ink-2); font-weight:600; font-size:14px;
-  transition:background-color var(--d-state) var(--ez), color var(--d-state) var(--ez)}
+  transition:background-color var(--d-state) var(--ez), color var(--d-state) var(--ez), transform var(--d-press) var(--ez)}
+.flagchip input:active + span{transform:scale(.95)}
 .flagchip input:checked + span{background:var(--ink); color:var(--sprout-lit)}
 .flagchip input:focus-visible + span{outline:2px solid var(--ember); outline-offset:2px}
 
@@ -241,7 +268,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   <section class="stack">
     <div class="section-head"><p class="t-label">How it works</p><h2 class="t-display">Five steps, and the last one repeats.</h2></div>
-    <div class="card">
+    <div class="card" id="howitworks">
       <div class="row">
         <div class="chip" data-family="frost"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.3"/><circle cx="8" cy="17" r="2.3"/></svg></div>
         <div class="rowtext"><p class="t-title">Tell it your kitchen</p><p class="t-note">How you eat, what you cook on, who you're feeding. Carnivore, vegan, whatever's real for you — any regimen, any appliance.</p></div>
@@ -284,7 +311,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
       <p class="t-body" style="margin-top:4px">Keep tapping Log it and this fills in — exactly what a real store run needs, no flag required.</p>
       <div class="pills" id="lowPills" style="margin-top:10px"></div>
     </div>
-    <div class="card"><div class="flagpicker" id="flagpicker"></div></div>
+    <div class="card" id="flagpickercard"><div class="flagpicker" id="flagpicker"></div></div>
     <div class="card" id="cyclecard">
       <div class="split"><p class="t-label">An example cycle · 14 dinners</p><p class="mono counts" id="counts"></p></div>
       <div class="strip" id="strip"></div>
@@ -324,7 +351,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     </div>
   </section>
 
-  <section class="card card--solid">
+  <section class="card card--solid" id="yourdata">
     <div class="row" style="padding-top:0; border:0">
       <div class="chip chip--onsolid"><svg viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg></div>
       <div class="rowtext">
@@ -397,6 +424,31 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     document.getElementById('email').focus({preventScroll:true});
   });
 
+  // Scroll reveal. .reveal is added here, at runtime, never in the static markup -- if this
+  // script fails to run for any reason, every section is just normally visible, nothing is
+  // ever stuck hidden waiting on JS. Skipped entirely under reduced motion, same as the hero.
+  if (!reduced && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.2, rootMargin:'0px 0px -40px 0px'});
+    function reveal(selector, staggerMs){
+      document.querySelectorAll(selector).forEach(function(el, i){
+        el.classList.add('reveal');
+        if (staggerMs) el.style.transitionDelay = (i * staggerMs) + 'ms';
+        io.observe(el);
+      });
+    }
+    reveal('#howitworks .row', 70);
+    reveal('#tonightcard, #flagpickercard, #cyclecard', 90);
+    reveal('.why-grid .card', 100);
+    reveal('#yourdata, #signup', 0);
+  }
+
   var FAM = {beef:'ember', fish:'frost', poultry:'clay', pork:'plum', beans:'sprout'};
   var ORDER = ['beef','fish','poultry','pork','beans'];
   var CYCLE = [
@@ -445,6 +497,21 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function list(a){ return a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; }
+
+  // Shows or hides a demo card, and only plays the settle-in animation on the actual
+  // hidden->visible transition -- render() runs on every interaction, including ones where
+  // a card was already showing, and re-animating a card that never changed state would look
+  // like it's flickering every time you touch a different flag. Skipped under reduced motion.
+  function revealCard(el, show, spring){
+    var was = !el.hidden;
+    el.hidden = !show;
+    if (show && !was && !reduced){
+      var cls = spring ? 'settle-in--spring' : 'settle-in';
+      el.classList.remove('settle-in', 'settle-in--spring');
+      void el.offsetWidth; // force reflow so the animation restarts if it was already used once
+      el.classList.add(cls);
+    }
+  }
 
   var picker = document.getElementById('flagpicker');
   FLAGS.forEach(function(f){
@@ -501,7 +568,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     tonightUses.textContent = 'Uses ' + tp.stock + ' — ' + (STOCK[tp.stock] || 0) + ' on hand';
 
     lowPills.innerHTML = LOW.map(function(item){ return '<span class="pill less">' + esc(item) + '</span>'; }).join('');
-    lowcard.hidden = !LOW.length;
+    revealCard(lowcard, !!LOW.length);
     caps.innerHTML = r.caps.map(function(c){ return '<span>' + esc(c) + '</span>'; }).join('');
     caps.hidden = !r.caps.length;
 
@@ -509,33 +576,37 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     if (!r.sel.length){
       html = '<p class="t-note empty">Pick a flag above and the cycle answers.</p>';
     } else {
-      html += r.swaps.map(function(s){
-        return '<div class="swap"><div class="plate" data-family="' + FAM[s.cls] + '"><i></i></div><div class="rowtext">' +
+      // The actual dinner swap is the payoff moment, spring-eased and staggered; the
+      // secondary rows (beside dinner, a note) get the plain settle-in so the block still
+      // reads as one arrival, just with the real change given a touch more emphasis.
+      var swapDelay = reduced ? '' : ' style="animation-delay:';
+      html += r.swaps.map(function(s, i){
+        return '<div class="swap settle-in--spring"' + (swapDelay ? swapDelay + (i*70) + 'ms"' : '') + '><div class="plate" data-family="' + FAM[s.cls] + '"><i></i></div><div class="rowtext">' +
           '<p class="t-title"><s>' + esc(s.from) + '</s> becomes ' + esc(s.to) + '</p><p class="t-note">' + esc(s.why) + '</p></div></div>';
       }).join('');
       html += r.besides.map(function(b){
-        return '<div class="swap"><div class="plate" data-family="clay"><i></i></div><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
+        return '<div class="swap settle-in"><div class="plate" data-family="clay"><i></i></div><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
       }).join('');
       html += r.notes.map(function(n){
-        return '<div class="swap"><div class="plate" data-family="plum"><i></i></div><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
+        return '<div class="swap settle-in"><div class="plate" data-family="plum"><i></i></div><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
       }).join('');
     }
     swapsEl.innerHTML = html;
 
     if (r.gates.length){
       gateline.textContent = 'Nothing changes until what is already in the freezer — the ' + list(r.gates) + ' — is eaten. The list stops buying it; the plate swaps the night it runs out. Nothing wasted.';
-      gatecard.hidden = false;
+      revealCard(gatecard, true, true);
     } else { gatecard.hidden = true; }
 
     if (r.minus.length || r.plus.length){
       delta.innerHTML =
         (r.minus.length ? '<div class="deltarow"><span class="k">Less</span><span class="pills">' + r.minus.map(function(m){ return '<span class="pill less">' + esc(m) + '</span>'; }).join('') + '</span></div>' : '') +
         (r.plus.length ? '<div class="deltarow"><span class="k">Add</span><span class="pills">' + r.plus.map(function(m){ return '<span class="pill add">' + esc(m) + '</span>'; }).join('') + '</span></div>' : '');
-      listcard.hidden = false;
+      revealCard(listcard, true);
     } else { listcard.hidden = true; }
 
     var loggedAny = (cursor !== 0 || cycleNum > 1);
-    listcta.hidden = !(r.sel.length || loggedAny);
+    revealCard(listcta, r.sel.length || loggedAny);
     return r;
   }
 
@@ -608,7 +679,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
       note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will tell you the moment Plateside can run this on your actual numbers. Didn\'t open? <a href="mailto:hello@plateside.app">Contact us</a> directly.';
     }
     document.getElementById('askblock').hidden = true;
-    document.getElementById('saved').hidden = false;
+    revealCard(document.getElementById('saved'), true, true);
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
   });
 })();
