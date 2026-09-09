@@ -1,10 +1,18 @@
 <title>Plateside Early Access</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<meta name="description" content="Plateside takes the guesswork out of eating. What to cook, what to buy, and when, sized to your goal and shaped by your blood work. Nothing you type ever leaves your phone.">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-mono-500.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Fonts are served from this origin: no third-party request, and font-display:block so the first
+   paint waits the few ms it takes rather than flashing a fallback face and reflowing -- the
+   visible glitch this page had at "the moment a resource finishes loading." */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:400 800;font-display:block;src:url(fonts/archivo.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:block;src:url(fonts/dm-mono-400.woff2) format('woff2')}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:block;src:url(fonts/dm-mono-500.woff2) format('woff2')}
+
 :root{
   color-scheme:light;
   --enamel:#F2F2EF; --surface:#FFFFFF; --sunk:#E7E8E2; --hair:#E4E5DE;
@@ -15,15 +23,18 @@
   --clay-wash:#F0E8DA;   --clay-lit:#D9C7A8;   --clay:#A8875C;   --clay-deep:#8A6A3C;   --clay-ink:#6B5028;
   --plum-wash:#F5E5EA;   --plum-lit:#D9AEBD;   --plum:#9C6B7E;   --plum-deep:#7E4A5D;   --plum-ink:#6A3A4C;
   --on-lit:#12150E; --on-deep:#FFFFFF;
+  /* the plate: ceramic, lit from the top left */
+  --plate:#FFFFFF; --plate-rim:#ECEDE7; --plate-edge:#D5D7CF; --plate-well:#E3E5DE;
   --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px; --r-pill:999px;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px;
   --gutter:16px; --gap:12px;
   --lift-1:0 1px 2px rgba(18,21,14,.04), 0 6px 16px rgba(18,21,14,.05);
   --lift-2:0 2px 6px rgba(18,21,14,.06), 0 18px 40px rgba(18,21,14,.10);
   --lift-3:0 8px 20px rgba(18,21,14,.10), 0 34px 70px rgba(18,21,14,.18);
+  --grain-blend:multiply; --grain-opacity:.07;
   --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
   --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-  --d-press:120ms; --d-state:220ms; --d-enter:380ms; --d-hero:620ms;
+  --d-press:120ms; --d-state:220ms; --d-enter:380ms; --d-hero:620ms; --d-plate:900ms;
   --ez:cubic-bezier(.22,.72,.24,1); --ez-out:cubic-bezier(.16,1,.3,1); --ez-spring:cubic-bezier(.34,1.42,.5,1);
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
@@ -36,9 +47,11 @@
   --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
   --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
   --on-lit:#12150E; --on-deep:#0B0D0A;
+  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
   --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
+  --grain-blend:screen; --grain-opacity:.09;
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
@@ -50,17 +63,20 @@
   --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
   --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
   --on-lit:#12150E; --on-deep:#0B0D0A;
+  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
   --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
+  --grain-blend:screen; --grain-opacity:.09;
 }
 [data-family="sprout"]{--wash:var(--sprout-wash);--lit:var(--sprout-lit);--core:var(--sprout);--deep:var(--sprout-deep);--fam-ink:var(--sprout-ink)}
 [data-family="ember"] {--wash:var(--ember-wash); --lit:var(--ember-lit); --core:var(--ember); --deep:var(--ember-deep); --fam-ink:var(--ember-ink)}
 [data-family="frost"] {--wash:var(--frost-wash); --lit:var(--frost-lit); --core:var(--frost); --deep:var(--frost-deep); --fam-ink:var(--frost-ink)}
-[data-family="clay"]  {--wash:var(--clay-wash);  --lit:var(--clay-lit);  --core:var(--clay);  --deep:var(--clay-deep);  --fam-ink:var(--clay-ink)}
-[data-family="plum"]  {--wash:var(--plum-wash);  --lit:var(--plum-lit);  --core:var(--plum);  --deep:var(--plum-deep);  --fam-ink:var(--plum-ink)}
+[data-family="clay"]  {--wash:var(--clay-wash);  --lit:var(--clay-lit);  --core:var(--clay);  --deep:var(--clay-deep); --fam-ink:var(--clay-ink)}
+[data-family="plum"]  {--wash:var(--plum-wash);  --lit:var(--plum-lit);  --core:var(--plum);  --deep:var(--plum-deep); --fam-ink:var(--plum-ink)}
 
 *,*::before,*::after{box-sizing:border-box}
+html{background:var(--enamel)}
 body{margin:0;background:var(--enamel);color:var(--ink);font-family:var(--sans);
   font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-wrap:pretty}
 h1,h2,h3,p{margin:0}
@@ -70,11 +86,14 @@ h1,h2,h3,p{margin:0}
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 
-.t-hero{font-size:clamp(38px,9vw,56px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance}
-/* Type scale is free against the color budget -- it isn't a fill, so it never touches the
-   one-loud-card rule. Used exactly once, on the page's actual best line, so the boldness of the
-   copy and the boldness of the setting match. Sits between t-display and t-hero on purpose: part
-   of the same family, just louder. */
+/* Grain: depth earned with material, not a colour wash. One seamless noise tile, rasterised
+   once and repeated, sitting over the whole field (and everything on it, plate included) at a
+   few percent. Multiply on the light ground, screen on the dark one. */
+.grain{position:fixed; inset:0; z-index:50; pointer-events:none; mix-blend-mode:var(--grain-blend); opacity:var(--grain-opacity);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size:180px 180px}
+
+.t-hero{font-size:clamp(40px,10vw,64px);line-height:.92;font-weight:800;letter-spacing:-.04em;text-wrap:balance}
 .t-statement{font-size:clamp(32px,6.5vw,44px);line-height:1.05;font-weight:760;letter-spacing:-.03em;text-wrap:balance}
 .t-display{font-size:clamp(24px,4vw,30px);line-height:1.1;font-weight:720;letter-spacing:-.02em}
 .t-title{font-size:20px;line-height:1.2;font-weight:660;letter-spacing:-.015em}
@@ -82,12 +101,15 @@ h1,h2,h3,p{margin:0}
 .t-note{font-size:13px;line-height:1.4;color:var(--ink-3)}
 .t-label{font-size:11px;line-height:1;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .mono{font-family:var(--mono)}
+.num{font-weight:800; letter-spacing:-.03em; line-height:.92; font-variant-numeric:tabular-nums}
+.num--lg{font-size:44px}
+.num--md{font-size:26px}
 
 .wrap{max-width:640px; margin:0 auto; padding:0 var(--gutter)}
 .stack{display:flex; flex-direction:column; gap:var(--gap)}
 .split{display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:var(--s2) var(--s3)}
 
-header{padding:28px 0 20px}
+header{padding:24px 0 8px}
 header .wrap{display:flex; align-items:center; justify-content:space-between}
 .brand{font-weight:800; letter-spacing:.16em; font-size:13px}
 .status-pip{display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px;
@@ -95,105 +117,80 @@ header .wrap{display:flex; align-items:center; justify-content:space-between}
 .status-pip::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
 
 main{padding-bottom:64px}
-main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
+main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var(--s7)}
 
-.card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s5); box-shadow:var(--lift-1);
-  position:relative; overflow:hidden}
-/* Its rows have no background of their own to clip -- lifting overflow here lets them
-   reveal at the same travel distance as everything else, instead of a smaller, more timid
-   one just for this card. */
-#howitworks{overflow:visible}
-.card--tint{background:var(--wash); box-shadow:none}
-.card--lit{background:var(--lit); color:var(--on-lit); box-shadow:var(--lift-2)}
-.card--solid{background:var(--ink); color:var(--enamel); box-shadow:var(--lift-2)}
-.card--lit .t-label{color:inherit; opacity:.6}
-.card--solid .t-label{color:inherit; opacity:.55}
-
-/* The two loud cards on the page, and the only two that get physically bigger than the column
-   they sit in -- bleeding past it is a second, independent signal of "this one matters" that
-   doesn't depend on color, stacked on top of the color signal instead of replacing it. Cancels
-   just the gutter below 800px (reaches the true screen edge, never past it); at 800px+ .wrap has
-   already reached its own 640px max-width, so a fixed 96px margin lands exactly 80px past the
-   column's own edge at that width and only grows safer (further from the viewport edge) above
-   it -- verified arithmetically, not just eyeballed, before picking 800 as the breakpoint. */
-#hero, #yourdata{
-  border-radius:var(--r-xl);
-  margin-left:calc(-1 * var(--gutter)); margin-right:calc(-1 * var(--gutter));
-}
-@media (min-width:800px){
-  #hero, #yourdata{ margin-left:-96px; margin-right:-96px; }
-}
-/* Flat --ink has nothing to tint -- color-mixing black into itself is a no-op, so #yourdata
-   keeps --lift-2 unchanged and only #hero gets a shadow rebuilt to glow its own color instead
-   of a generic gray drop-shadow. */
-#hero{box-shadow:0 3px 10px color-mix(in srgb, var(--sprout-deep) 25%, transparent),
-  0 24px 56px color-mix(in srgb, var(--sprout-deep) 35%, transparent)}
-
-.motif{position:absolute; inset:0; pointer-events:none;
-  background:
-    radial-gradient(circle at 88% 12%, rgba(255,255,255,.55) 0 21%, transparent 21.5%),
-    radial-gradient(circle at 88% 12%, transparent 0 28%, rgba(255,255,255,.32) 28.5% 31%, transparent 31.5%),
-    radial-gradient(circle at 88% 12%, transparent 0 38%, rgba(255,255,255,.16) 38.5% 40%, transparent 40.5%)}
-/* Adapted, not copied: the hero's motif uses white against a saturated --lit background; a wash
-   background is already pale, so white rings would barely register. This mixes --core (a more
-   saturated tone than the wash) against transparent instead, reading as a faint deeper shade of
-   the same color rather than a highlight. Used only on #tonightcard -- the one other card
-   actually about a specific dish, where the motif's own meaning applies. */
-.motif--tint{background:
-    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--core) 22%, transparent) 0 21%, transparent 21.5%),
-    radial-gradient(circle at 88% 12%, transparent 0 28%, color-mix(in srgb, var(--core) 14%, transparent) 28.5% 31%, transparent 31.5%),
-    radial-gradient(circle at 88% 12%, transparent 0 38%, color-mix(in srgb, var(--core) 8%, transparent) 38.5% 40%, transparent 40.5%)}
-.hero-in{position:relative; z-index:2}
+/* ---------- the hero: a subject on the field, not a box ------------------------------ */
+.hero{overflow:clip; position:relative; padding:0 0 var(--s4)}
+.hero-in{max-width:640px; margin:0 auto; padding:0 var(--gutter); position:relative}
+.hero-art{position:relative; width:min(104vw,520px); margin:0 -18vw 0 auto; z-index:1;
+  filter:drop-shadow(0 30px 40px rgba(18,21,14,.12))}
+.hero-art svg{display:block; width:100%; height:auto}
+.hero-copy{position:relative; z-index:2; margin-top:-28px}
 .hero-eyebrow{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
-  letter-spacing:.12em; text-transform:uppercase; color:var(--on-lit); opacity:.62}
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
 .hero-eyebrow .pip{width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
+.hero-copy .t-hero{margin-top:var(--s3)}
 .transit{display:flex; align-items:center; gap:10px; margin-top:var(--s5)}
 .tpill{display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 14px; border-radius:var(--r-pill);
   font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:500}
-.tpill.out{background:rgba(255,255,255,.5); color:var(--ember-deep)}
+.tpill.out{background:var(--sunk); color:var(--ember-deep)}
 .tpill.in{background:var(--ink); color:var(--sprout-lit)}
 .tpill i{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
-.tarrow{color:var(--on-lit); opacity:.55; flex:none}
+.tarrow{color:var(--ink-3); flex:none}
 .tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
-.hero p.lede{margin-top:var(--s4); font-size:16px; line-height:1.55; color:var(--on-lit); opacity:.82; max-width:46ch}
+.hero p.lede{margin-top:var(--s4); font-size:16.5px; line-height:1.55; color:var(--ink-2); max-width:46ch}
+@media (min-width:800px){
+  .hero-in{display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:var(--s6); padding-top:var(--s6)}
+  .hero-art{width:min(52vw,560px); margin:0 -8vw 0 auto; grid-column:2}
+  .hero-copy{grid-column:1; grid-row:1; margin-top:0}
+}
 
-/* Staged hero entrance, pure CSS so it runs even before the script executes. Reduced motion
-   is already handled globally (line ~66): duration collapses to .01ms, so content still lands
-   in its final state immediately, nothing stays hidden. */
+/* Entrance: the plate settles onto the counter first, the words read in after it. Pure CSS so
+   it runs before the script, and the global reduced-motion rule collapses it to nothing. */
+@keyframes plateIn{from{opacity:0; transform:translateY(28px) rotate(-4deg) scale(.94)}}
 @keyframes fadeRise{from{opacity:0; transform:translateY(16px)}}
-#hero .hero-eyebrow{animation:fadeRise var(--d-hero) var(--ez-out) both}
-#hero .t-hero{animation:fadeRise var(--d-hero) var(--ez-out) 70ms both}
-#hero .transit{animation:fadeRise var(--d-hero) var(--ez-out) 140ms both}
-#hero p.lede{animation:fadeRise var(--d-hero) var(--ez-out) 210ms both}
-#hero .cta-row{animation:fadeRise var(--d-hero) var(--ez-out) 280ms both}
+.hero-art{animation:plateIn var(--d-plate) var(--ez-out) both}
+.hero-copy .hero-eyebrow{animation:fadeRise var(--d-hero) var(--ez-out) 180ms both}
+.hero-copy .t-hero{animation:fadeRise var(--d-hero) var(--ez-out) 260ms both}
+.hero-copy .transit{animation:fadeRise var(--d-hero) var(--ez-out) 340ms both}
+.hero-copy .lede{animation:fadeRise var(--d-hero) var(--ez-out) 420ms both}
+.hero-copy .cta-row{animation:fadeRise var(--d-hero) var(--ez-out) 500ms both}
 
+/* ---------- buttons: light and material, no gradient wash ---------------------------- */
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; padding:0 26px;
   border-radius:var(--r-pill); border:0; font-family:var(--sans); font-weight:700; font-size:15.5px;
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
-  transition:transform var(--d-press) var(--ez), opacity var(--d-press) var(--ez)}
-.btn:active{transform:scale(.97)}
-.btn-ink{background:var(--ink); color:var(--enamel)}
-.btn-ink:hover{opacity:.9}
-.btn-onlit{background:var(--ink); color:var(--sprout-lit)}
-.btn-onlit:hover{opacity:.88}
-.btn-ghost{background:none; color:inherit; opacity:.72; text-decoration:underline; text-underline-offset:3px; height:auto; padding:0}
+  cursor:pointer; -webkit-tap-highlight-color:transparent; position:relative;
+  transition:transform var(--d-press) var(--ez), opacity var(--d-press) var(--ez), box-shadow var(--d-press) var(--ez)}
+.btn:active{transform:translateY(1px) scale(.985)}
 .btn svg{width:16px; height:16px; stroke:currentColor; stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round}
+.btn-ink{background:var(--ink); color:var(--enamel);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(0,0,0,.35), 0 1px 2px rgba(18,21,14,.2), var(--lift-1)}
+.btn-ink:hover{opacity:.92}
+/* The one real ask on the page, top and bottom: a solid deep ember with a top-edge light and a
+   bottom-edge shade for material, and a shadow that carries its own colour. */
+.btn-signature{background:var(--ember-deep); color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(0,0,0,.22), 0 1px 2px rgba(18,21,14,.22),
+    0 10px 26px color-mix(in srgb, var(--ember-deep) 42%, transparent)}
+.btn-signature:hover{opacity:.95}
+.btn-signature:active{box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.22), 0 1px 2px rgba(18,21,14,.22),
+    0 4px 12px color-mix(in srgb, var(--ember-deep) 34%, transparent)}
+.btn-ghost{background:none; color:var(--ink); opacity:.8; text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px; height:auto; padding:0; box-shadow:none}
 .cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
 
-.chip{width:38px; height:38px; border-radius:var(--r-sm); background:var(--wash); color:var(--core);
+.card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s5); box-shadow:var(--lift-1);
+  position:relative; overflow:hidden}
+.card--tint{background:var(--wash); box-shadow:none}
+.card--solid{background:var(--ink); color:var(--enamel); box-shadow:var(--lift-2)}
+.card--solid .t-label{color:inherit; opacity:.55}
+/* The one card that gets physically bigger than the column: edge to edge below 800px (reaches
+   the true screen edge, never past it), 80px past the column above it. */
+#yourdata{border-radius:var(--r-xl); margin-left:calc(-1 * var(--gutter)); margin-right:calc(-1 * var(--gutter))}
+@media (min-width:800px){ #yourdata{margin-left:-96px; margin-right:-96px} }
+
+.chip{width:46px; height:46px; border-radius:var(--r-md); background:var(--wash); color:var(--core);
   display:grid; place-items:center; flex:none}
 .chip--onsolid{background:rgba(255,255,255,.14); color:var(--enamel)}
-.chip--lg{width:46px; height:46px; border-radius:var(--r-md)}
-.chip svg{width:19px; height:19px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round}
-.chip--lg svg{width:24px; height:24px}
-
-/* The page's one richest interactive element -- the demo's Log it and the real signup submit,
-   the two places someone actually commits to something, not tied to the app's own button in
-   meaning: reasoned fresh for a page seen once, where the final action deserves the most
-   confident treatment on the page, not the least. */
-.btn-signature{background:linear-gradient(180deg, var(--ember-deep), var(--ember-ink)); color:var(--on-deep);
-  box-shadow:0 4px 16px color-mix(in srgb, var(--ember-deep) 38%, transparent), var(--lift-3)}
-.btn-signature:hover{opacity:.94}
+.chip svg{width:24px; height:24px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round}
 
 .row{display:flex; align-items:flex-start; gap:var(--s4); padding:var(--s4) 0; width:100%}
 .row + .row{border-top:1px solid var(--hair)}
@@ -206,59 +203,53 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .section-head{padding:0 var(--s2)}
 .section-head .t-label{margin-bottom:6px}
 
-/* Scroll reveal: JS adds .reveal at setup time (never present in the static markup), so a
-   page with JS unavailable never has hidden content -- it just skips the entrance and shows
-   everything normally. .in is toggled on and off by intersection -- genuinely dynamic, fades
-   back out on the way past and re-plays on the way back, not a one-time entrance. --d-hero is
-   the site's own "considered" duration (620ms), not the quicker --d-enter used for the demo's
-   own action-response cards below, which should stay snappy since those are direct feedback,
-   not an ambient reveal. */
+/* Steps: on the field, no box, no dividers -- spacing does the separating. */
+.steps{list-style:none; margin:var(--s2) 0 0; padding:0 var(--s2); display:flex; flex-direction:column; gap:var(--s5)}
+.steps li{display:flex; gap:var(--s4); align-items:flex-start}
+.steps .rowtext{flex:1; min-width:0}
+.steps .t-title{font-size:17px; font-weight:680}
+.steps .t-note{margin-top:4px; color:var(--ink-2); font-size:14.5px}
+
+/* Why: a statement and two short answers, on the field. */
+.why{display:grid; grid-template-columns:1fr; gap:var(--s5); padding:0 var(--s2); margin-top:var(--s5)}
+@media (min-width:600px){.why{grid-template-columns:1fr 1fr; gap:var(--s7)}}
+.why-item .t-label{color:var(--fam-ink)}
+.why-item p.t-body{margin-top:8px; color:var(--ink-2)}
+
+/* Scroll reveal: added by JS at runtime, never in markup, so a page without JS is simply
+   visible. Toggled both ways on intersection. */
 .reveal{opacity:0; transform:translateY(28px) scale(.97);
   transition:opacity var(--d-hero) var(--ez-out), transform var(--d-hero) var(--ez-out)}
 .reveal.in{opacity:1; transform:translateY(0) scale(1)}
-
-/* Settle-in: for a card that appears because of what you just did (logged a meal, picked a
-   flag), not because you scrolled to it -- smaller offset, quicker, so it reads as a direct
-   answer to the action rather than the same weight as a first-scroll reveal. */
 @keyframes settleIn{from{opacity:0; transform:translateY(-10px)}}
 .settle-in{animation:settleIn var(--d-enter) var(--ez-out) both}
 .settle-in--spring{animation:settleIn var(--d-enter) var(--ez-spring) both}
-.why-grid{display:grid; grid-template-columns:1fr; gap:var(--gap)}
-@media (min-width:600px){.why-grid{grid-template-columns:1fr 1fr}}
-.card--tint .t-label{color:var(--fam-ink); opacity:.85}
-.card--tint p{color:var(--ink); opacity:.9}
-.card--tint p + p{margin-top:8px}
 
-.num{font-weight:800; letter-spacing:-.03em; line-height:.92; font-variant-numeric:tabular-nums}
-.num--lg{font-size:44px}
-
-/* ---- the demo: flag chips, an example cycle, the swaps, the gate, the list */
-.flagpicker{display:flex; flex-wrap:wrap; gap:8px}
+/* ---------- the demo ------------------------------------------------------------------- */
+.flagpicker{display:flex; flex-wrap:wrap; gap:8px; padding:0 var(--s2)}
 .flagchip{position:relative; display:inline-flex}
 .flagchip input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer}
 .flagchip span{display:inline-flex; align-items:center; height:40px; padding:0 16px; border-radius:var(--r-pill);
-  background:var(--sunk); color:var(--ink-2); font-weight:600; font-size:14px;
-  transition:background-color var(--d-state) var(--ez), color var(--d-state) var(--ez), transform var(--d-press) var(--ez)}
+  background:var(--surface); color:var(--ink-2); font-weight:600; font-size:14px; box-shadow:var(--lift-1);
+  transition:background-color var(--d-state) var(--ez), color var(--d-state) var(--ez), transform var(--d-press) var(--ez), box-shadow var(--d-state) var(--ez)}
 .flagchip input:active + span{transform:scale(.95)}
-.flagchip input:checked + span{background:var(--ink); color:var(--sprout-lit)}
+.flagchip input:checked + span{background:var(--ink); color:var(--sprout-lit); box-shadow:inset 0 1px 0 rgba(255,255,255,.14), var(--lift-1)}
 .flagchip input:focus-visible + span{outline:2px solid var(--ember); outline-offset:2px}
 
-.counts{font-size:12px; color:var(--ink-3); text-align:right}
-/* Padding rhythm across an otherwise-identical run of cards, instead of uniform --s5 everywhere:
-   tight for a control strip, loose for the section's actual centerpiece. Breaks the sameness for
-   free, no color or new tokens involved. */
-#flagpickercard{padding:var(--s4)}
+/* mini plates: one base, one mark per family, the family colour set on the svg element itself */
+.mp{display:block; width:100%; height:auto; aspect-ratio:1}
+.mp--lg{width:104px}
+.mp--sm{width:34px; flex:none}
+.tonight{display:grid; grid-template-columns:auto 1fr; gap:var(--s4); align-items:center}
+.tonight-art{width:96px; flex:none}
+.tonight-copy{min-width:0}
+.tonight .btn{grid-column:1 / -1; justify-self:end; height:44px; padding:0 22px; font-size:14px}
 #cyclecard{padding:var(--s6)}
+.counts{font-size:12px; color:var(--ink-3); text-align:right}
 .strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:var(--s3)}
-/* Bleeds to #cyclecard's own edges (contained inside its own card, distinct from the two
-   page-level bleed cards) -- reads as a full shelf instead of an inset grid. */
-#cyclecard .strip{margin-left:calc(-1 * var(--s6)); margin-right:calc(-1 * var(--s6))}
-.plate{aspect-ratio:1; border-radius:var(--r-xs); background:var(--wash); display:grid; place-items:center; position:relative;
-  transition:background-color var(--d-state) var(--ez)}
-.plate i{width:10px; height:10px; border-radius:50%; background:var(--core); transition:background-color var(--d-state) var(--ez)}
-.plate.swapped{box-shadow:inset 0 0 0 2px var(--ink)}
-.plate.tonight{box-shadow:0 0 0 3px var(--enamel), 0 0 0 5px var(--ink)}
-.plate.tonight.swapped{box-shadow:inset 0 0 0 2px var(--ink), 0 0 0 3px var(--enamel), 0 0 0 5px var(--ink)}
+.plate{position:relative; border-radius:var(--r-sm); padding:3px; transition:box-shadow var(--d-state) var(--ez)}
+.plate.tonight{box-shadow:inset 0 0 0 2px var(--ink)}
+.plate.swapped::after{content:""; position:absolute; right:2px; top:2px; width:8px; height:8px; border-radius:50%; background:var(--ember-deep); box-shadow:0 0 0 2px var(--surface)}
 .legend{display:flex; flex-wrap:wrap; gap:10px 14px; margin-top:var(--s3)}
 .legend span{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-3)}
 .legend i{width:8px; height:8px; border-radius:50%; background:var(--core)}
@@ -266,9 +257,10 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .caps span{height:26px; display:inline-flex; align-items:center; padding:0 10px; border-radius:var(--r-pill);
   background:var(--sunk); font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2)}
 #swaps{margin-top:var(--s2)}
-.swap{display:flex; gap:var(--s3); padding:var(--s3) 0; align-items:flex-start}
+.swap{display:flex; gap:var(--s3); padding:var(--s3) 0; align-items:center}
 .swap + .swap{border-top:1px solid var(--hair)}
-.swap .plate{width:34px; height:34px; flex:none; aspect-ratio:auto}
+.mp-pair{display:inline-flex; align-items:center; gap:4px; flex:none}
+.mp-pair svg.arrow{width:14px; height:14px; stroke:var(--ink-3); stroke-width:2; fill:none; stroke-linecap:round}
 .swap .rowtext{flex:1; min-width:0}
 .swap .t-title{font-size:16px}
 .swap .t-note{margin-top:3px; color:var(--ink-2)}
@@ -289,83 +281,190 @@ form{margin-top:var(--s5); display:flex; flex-direction:column; gap:var(--s4); m
 input[type=email], select{
   width:100%; font-family:var(--sans); font-size:16px; color:var(--ink); background:var(--sunk);
   border:0; border-radius:var(--r-md); padding:14px 16px; -webkit-appearance:none; appearance:none;
-}
+  box-shadow:inset 0 1px 2px rgba(18,21,14,.06)}
 input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outline-offset:1px}
 #saved{margin-top:var(--s4)}
 #saved .row:first-child{padding-top:0; border:0}
 #saved .note{margin-top:var(--s3); padding:12px 14px; border-radius:var(--r-md); background:var(--sunk); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
-#saved .note .addr{font-family:var(--mono); color:var(--ink)}
 
 footer{padding:var(--s7) 0 var(--s9)}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
+footer .foot-row{display:flex; justify-content:space-between; align-items:baseline; gap:var(--s4); margin-top:10px}
+footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--ink-3); opacity:.7}
 </style>
+
+<!-- the drawn plate: one base and five marks, coloured by whatever data-family the <svg> carries -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+    <symbol id="mp-base" viewBox="0 0 100 100">
+      <ellipse cx="53" cy="56" rx="43" ry="41" style="fill:var(--ink)" opacity=".16" filter="url(#fx-soft)"/>
+      <circle cx="50" cy="50" r="44" style="fill:var(--plate)"/>
+      <circle cx="50" cy="50" r="44" fill="none" style="stroke:var(--plate-edge)" stroke-width="1.6"/>
+      <circle cx="50" cy="50" r="33" fill="none" style="stroke:var(--plate-well)" stroke-width="2.2"/>
+      <path d="M21 36 A33 33 0 0 1 36 21" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".95"/>
+    </symbol>
+    <symbol id="mark-beef" viewBox="0 0 100 100">
+      <ellipse cx="53" cy="57" rx="24" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <rect x="29" y="36" width="44" height="29" rx="10" style="fill:var(--core)" transform="rotate(-12 50 50)"/>
+      <path d="M38 52 Q50 43 64 52" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45" transform="rotate(-12 50 50)"/>
+      <rect x="34" y="40" width="16" height="4" rx="2" fill="#fff" opacity=".4" transform="rotate(-12 50 50)"/>
+    </symbol>
+    <symbol id="mark-fish" viewBox="0 0 100 100">
+      <ellipse cx="52" cy="56" rx="24" ry="13" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <path d="M25 51 Q38 31 74 39 Q79 55 61 64 Q38 69 25 51Z" style="fill:var(--core)"/>
+      <path d="M44 42 Q52 51 44 61" stroke="#fff" stroke-width="2.2" fill="none" opacity=".55"/>
+      <path d="M58 41 Q64 50 58 59" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45"/>
+      <path d="M32 46 Q45 37 62 40" stroke="#fff" stroke-width="3" fill="none" opacity=".4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="mark-poultry" viewBox="0 0 100 100">
+      <ellipse cx="53" cy="58" rx="23" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <path d="M29 58 Q28 34 55 32 Q75 32 74 49 Q73 67 50 68 Q33 68 29 58Z" style="fill:var(--core)"/>
+      <path d="M36 46 Q46 38 60 41" stroke="#fff" stroke-width="3" fill="none" opacity=".42" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="mark-pork" viewBox="0 0 100 100">
+      <ellipse cx="53" cy="57" rx="25" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="50" cy="50" rx="25" ry="17" style="fill:var(--core)" transform="rotate(-18 50 50)"/>
+      <path d="M31 47 Q40 38 54 40" stroke="#fff" stroke-width="3" fill="none" opacity=".42" stroke-linecap="round" transform="rotate(-18 50 50)"/>
+      <ellipse cx="62" cy="55" rx="7" ry="4.5" fill="#fff" opacity=".35" transform="rotate(-18 50 50)"/>
+    </symbol>
+    <symbol id="mark-beans" viewBox="0 0 100 100">
+      <ellipse cx="52" cy="58" rx="22" ry="13" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="40" cy="45" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(-20 40 45)"/>
+      <ellipse cx="59" cy="47" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(15 59 47)"/>
+      <ellipse cx="49" cy="59" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(-5 49 59)"/>
+      <ellipse cx="37" cy="43" rx="4" ry="2" fill="#fff" opacity=".4" transform="rotate(-20 40 45)"/>
+      <ellipse cx="56" cy="45" rx="4" ry="2" fill="#fff" opacity=".4" transform="rotate(15 59 47)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
 
 <header><div class="wrap">
   <span class="brand">PLATESIDE</span>
   <span class="status-pip">Not live yet</span>
 </div></header>
 
-<main><div class="wrap">
+<main>
 
-  <section class="card card--lit" data-family="sprout" id="hero">
-    <div class="motif"></div>
+  <section class="hero" id="hero" aria-label="Plateside">
     <div class="hero-in">
-      <div class="hero-eyebrow"><span class="pip"></span>Early access</div>
-      <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
-      <div class="transit">
-        <span class="tpill out"><i></i>Running low</span>
-        <span class="tarrow"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-        <span class="tpill in"><i></i>List ready</span>
+      <div class="hero-art" id="heroArt" aria-hidden="true">
+        <svg viewBox="0 0 440 440">
+          <defs>
+            <filter id="fx-cast" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+            <filter id="fx-under" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+            <radialGradient id="rim" cx="50%" cy="50%" r="50%">
+              <stop offset="79%" style="stop-color:var(--plate)"/>
+              <stop offset="93%" style="stop-color:var(--plate-rim)"/>
+              <stop offset="100%" style="stop-color:var(--plate-edge)"/>
+            </radialGradient>
+            <radialGradient id="well" cx="50%" cy="46%" r="52%">
+              <stop offset="66%" style="stop-color:var(--plate)"/>
+              <stop offset="100%" style="stop-color:var(--plate-well)"/>
+            </radialGradient>
+            <linearGradient id="salmon" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F58C6E"/><stop offset="1" stop-color="#D4563A"/>
+            </linearGradient>
+          </defs>
+          <!-- cast shadow, light from the top left -->
+          <ellipse cx="234" cy="250" rx="176" ry="162" style="fill:var(--ink)" opacity=".22" filter="url(#fx-cast)"/>
+          <!-- the plate -->
+          <circle cx="220" cy="220" r="184" fill="url(#rim)"/>
+          <circle cx="220" cy="220" r="146" fill="url(#well)"/>
+          <path d="M92 162 A158 158 0 0 1 162 92" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".95"/>
+          <!-- greens, underneath -->
+          <g transform="translate(220 226)">
+            <ellipse cx="-44" cy="30" rx="48" ry="22" transform="rotate(-28)" fill="#6FAA14"/>
+            <ellipse cx="-60" cy="-8" rx="40" ry="18" transform="rotate(18)" fill="#4F7A0C"/>
+            <ellipse cx="36" cy="50" rx="44" ry="20" transform="rotate(-10)" fill="#79B517"/>
+            <ellipse cx="-40" cy="22" rx="20" ry="6" transform="rotate(-28)" fill="#fff" opacity=".2"/>
+            <ellipse cx="40" cy="44" rx="18" ry="5" transform="rotate(-10)" fill="#fff" opacity=".18"/>
+          </g>
+          <!-- salmon -->
+          <g transform="translate(222 206) rotate(-14)">
+            <ellipse cx="4" cy="12" rx="86" ry="46" style="fill:var(--ink)" opacity=".16" filter="url(#fx-under)"/>
+            <path d="M-86 -34 Q-40 -52 22 -46 Q86 -38 92 -4 Q94 32 42 44 Q-30 54 -82 32 Q-102 8 -86 -34Z" fill="url(#salmon)"/>
+            <path d="M-54 -26 Q-32 4 -50 34" stroke="#FDE7E0" stroke-width="3" fill="none" opacity=".75"/>
+            <path d="M-16 -36 Q6 0 -14 40" stroke="#FDE7E0" stroke-width="3" fill="none" opacity=".72"/>
+            <path d="M28 -38 Q50 -4 32 38" stroke="#FDE7E0" stroke-width="3" fill="none" opacity=".62"/>
+            <path d="M-72 -30 Q-20 -47 42 -41" stroke="#fff" stroke-width="4.5" fill="none" opacity=".5" stroke-linecap="round"/>
+          </g>
+          <!-- lemon -->
+          <g transform="translate(304 296)">
+            <ellipse cx="5" cy="7" rx="35" ry="31" style="fill:var(--ink)" opacity=".14" filter="url(#fx-under)"/>
+            <circle r="33" fill="#F6D64C"/>
+            <circle r="27.5" fill="none" stroke="#FFF6C7" stroke-width="4.2"/>
+            <g stroke="#E4BE2C" stroke-width="2.2" stroke-linecap="round"><path d="M0 -25V25M-25 0H25M-17.5 -17.5L17.5 17.5M-17.5 17.5L17.5 -17.5"/></g>
+            <circle r="4" fill="#FFF6C7"/>
+            <circle cx="-10" cy="-12" r="6" fill="#fff" opacity=".38"/>
+          </g>
+          <g fill="#3F6606" opacity=".85"><circle cx="150" cy="178" r="2.4"/><circle cx="288" cy="178" r="2"/><circle cx="178" cy="302" r="2.2"/><circle cx="262" cy="152" r="1.8"/></g>
+        </svg>
       </div>
-      <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react, then flag what's on a panel and watch it get sharper too. No email needed for either part.</p>
-      <div class="cta-row">
-        <button class="btn btn-onlit" id="ctaTop">Get early access
-          <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-        </button>
-        <a class="btn btn-ghost" href="#guide" style="color:var(--on-lit)">Try it first</a>
+      <div class="hero-copy">
+        <div class="hero-eyebrow"><span class="pip"></span>Early access</div>
+        <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
+        <div class="transit">
+          <span class="tpill out"><i></i>Running low</span>
+          <span class="tarrow"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+          <span class="tpill in"><i></i>List ready</span>
+        </div>
+        <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react, then flag what's on a panel and watch it get sharper too. No email needed for either part.</p>
+        <div class="cta-row">
+          <button class="btn btn-signature" id="ctaTop">Get early access
+            <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </button>
+          <a class="btn btn-ghost" href="#guide">Try it first</a>
+        </div>
       </div>
     </div>
   </section>
 
+  <div class="wrap">
+
   <section class="stack">
     <div class="section-head"><p class="t-label">How it works</p><h2 class="t-display">Five steps, and the last one repeats.</h2></div>
-    <div class="card" id="howitworks">
-      <div class="row">
+    <ol class="steps" id="howitworks">
+      <li>
         <div class="chip" data-family="frost"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.3"/><circle cx="8" cy="17" r="2.3"/></svg></div>
         <div class="rowtext"><p class="t-title">Tell it your kitchen</p><p class="t-note">How you eat, what you cook on, who you're feeding. Carnivore, vegan, whatever's real for you — any regimen, any appliance.</p></div>
-      </div>
-      <div class="row">
+      </li>
+      <li>
         <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5M20 12a8 8 0 0 1-14 5"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></div>
         <div class="rowtext"><p class="t-title">Builds a rotation</p><p class="t-note">Real dinners you'd actually cook, sized to your goal.</p></div>
-      </div>
-      <div class="row">
+      </li>
+      <li>
         <div class="chip" data-family="clay"><svg viewBox="0 0 24 24"><path d="M4 8h16l-1.5 11a1 1 0 0 1-1 .9H6.5a1 1 0 0 1-1-.9L4 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg></div>
         <div class="rowtext"><p class="t-title">Tracks your stock</p><p class="t-note">As you log meals, and tells you what to buy, at which store, and when.</p></div>
-      </div>
-      <div class="row">
+      </li>
+      <li>
         <div class="chip" data-family="plum"><svg viewBox="0 0 24 24"><path d="M14 3v5h5M6 3h9l5 5v13H6z"/><path d="M9 14h6M9 17h4"/></svg></div>
         <div class="rowtext"><p class="t-title">Add a lab report, if you have one</p><p class="t-note">Skip it and nothing breaks — the rotation already works from your kitchen and your goal. Add a report and food targets sharpen: researched guideline targets, not a guess, each one with a source.</p></div>
-      </div>
-      <div class="row">
+      </li>
+      <li>
         <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-5h5"/></svg></div>
         <div class="rowtext"><p class="t-title">Test again</p><p class="t-note">Dinner re-shapes itself, and a change waits for the food you already bought to run out first, so nothing is stranded.</p></div>
-      </div>
-    </div>
+      </li>
+    </ol>
   </section>
 
   <section class="stack" id="guide">
     <div class="section-head"><p class="t-label">Try it — no email needed</p><h2 class="t-display">Log tonight. Watch the kitchen react.</h2>
       <p class="t-body" style="margin-top:8px; color:var(--ink-2)">This is the real mechanism, run on an example kitchen. Log a plate and watch the stock count down toward a store run. Then flag what's on a lab panel and watch future nights swap too. Not your plan — nothing here leaves this page.</p>
     </div>
-    <div class="card card--tint" data-family="sprout" id="tonightcard">
-      <div class="motif motif--tint"></div>
-      <div class="split">
-        <div>
+    <div class="card card--tint" data-family="ember" id="tonightcard">
+      <div class="tonight">
+        <div class="tonight-art" id="tonightArt">
+          <svg class="mp mp--lg" id="tonightPlate" data-family="ember" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/><use href="#mark-beef" id="tonightMark"/></svg>
+        </div>
+        <div class="tonight-copy" id="tonightCopy">
           <p class="mono" id="tonightMeta" style="font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)"></p>
           <h3 class="t-title" id="tonightName" style="margin-top:6px; font-size:22px"></h3>
           <p class="t-note" id="tonightUses" style="margin-top:4px"></p>
         </div>
-        <button class="btn btn-signature" id="logBtn" style="height:44px; padding:0 20px; font-size:14px; flex:none">Log it</button>
+        <button class="btn btn-ink" id="logBtn">Log it</button>
       </div>
     </div>
     <div class="card card--tint" data-family="clay" id="lowcard" hidden>
@@ -373,7 +472,10 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
       <p class="t-body" style="margin-top:4px">Keep tapping Log it and this fills in — exactly what a real store run needs, no flag required.</p>
       <div class="pills" id="lowPills" style="margin-top:10px"></div>
     </div>
-    <div class="card" id="flagpickercard"><div class="flagpicker" id="flagpicker"></div></div>
+    <div id="flagblock">
+      <p class="t-label" style="padding:var(--s2) var(--s2) 0">Flag what's on your panel</p>
+      <div class="flagpicker" id="flagpicker" style="margin-top:10px"></div>
+    </div>
     <div class="card" id="cyclecard">
       <div class="split">
         <div><p class="t-label">An example cycle</p><p class="num num--md" style="margin-top:2px">14<span style="font-size:14px; font-weight:600; letter-spacing:0; opacity:.55"> dinners</span></p></div>
@@ -404,12 +506,12 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   <section class="stack">
     <div class="section-head"><p class="t-label">Why this exists</p><h2 class="t-statement">"Eat better" isn't an instruction. It's a homework assignment with no due date.</h2></div>
-    <div class="why-grid">
-      <div class="card card--tint" data-family="ember">
+    <div class="why">
+      <div class="why-item" data-family="ember">
         <p class="t-label">The gap</p>
         <p class="t-body">Dinner needs deciding three hundred times a year. Nothing tells you what's actually running low, what to buy for it, or which store to buy it at — you're rebuilding that from memory every single week. "Eat healthier" doesn't answer any of it, even when it's the right advice.</p>
       </div>
-      <div class="card card--tint" data-family="clay">
+      <div class="why-item" data-family="clay">
         <p class="t-label">The cost</p>
         <p class="t-body">If you've had blood work done, you already paid for it — a panel, a copay, sometimes hundreds out of pocket. What it should change for dinner has been free advice ever since, which is why it's usually vague.</p>
       </div>
@@ -474,13 +576,16 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   <footer>
     <p>Plateside is not a diagnostic tool. It shows the number, the trend, the bounds, and the rule that fired — never an interpretation.</p>
-    <p style="margin-top:10px"><a href="/privacy.html" style="color:var(--ink-3)">Privacy Policy</a></p>
+    <div class="foot-row"><a href="/privacy.html" style="color:var(--ink-3); font-size:13px">Privacy Policy</a><span class="build" id="build"></span></div>
   </footer>
 
-</div></main>
+  </div>
+</main>
 
 <script>
 (function(){
+  var BUILD = '21';
+  document.getElementById('build').textContent = 'build ' + BUILD;
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -489,22 +594,12 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     document.getElementById('email').focus({preventScroll:true});
   });
 
-  // Scroll reveal. .reveal is added here, at runtime, never in the static markup -- if this
-  // script fails to run for any reason, every section is just normally visible, nothing is
-  // ever stuck hidden waiting on JS. Skipped entirely under reduced motion, same as the hero.
-  // Genuinely dynamic: toggles .in both ways on intersection, never unobserves, so it fades
-  // out scrolling past and re-plays scrolling back. A first attempt at this expanded the
-  // bottom margin to give reveals lead time on the way down, but rootMargin isn't direction-
-  // aware -- the same expansion also delays the un-reveal on the way back up by the same
-  // amount, which is exactly the "stays appeared" bug. Plain 0px margin instead: symmetric in
-  // both directions, correct un-reveal right at the true edge; the "not rushed" feeling comes
-  // from --d-hero's longer duration and the low threshold catching it early in its scroll into
-  // view, not from an artificial pre-trigger zone.
+  // Scroll reveal: .reveal is added here, at runtime, never in the markup, so a page without JS is
+  // simply visible. Toggled both ways on intersection, 0px margin so it un-reveals right at the
+  // true edge in both directions.
   if (!reduced && 'IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        entry.target.classList.toggle('in', entry.isIntersecting);
-      });
+      entries.forEach(function(entry){ entry.target.classList.toggle('in', entry.isIntersecting); });
     }, {threshold:0.1});
     function reveal(selector, staggerMs){
       document.querySelectorAll(selector).forEach(function(el, i){
@@ -513,33 +608,26 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
         io.observe(el);
       });
     }
-    reveal('#howitworks .row', 70);
-    reveal('#tonightcard, #flagpickercard, #cyclecard', 90);
-    reveal('.why-grid .card', 100);
+    reveal('#howitworks li', 70);
+    reveal('#tonightcard, #flagblock, #cyclecard', 90);
+    reveal('.why-item', 100);
     reveal('#yourdata, #signup', 0);
   }
 
-  // The one thing here with no app equivalent to reuse: the app has no scrolling screens, so a
-  // scroll-linked effect isn't a borrowed pattern, it's what a long page can do that a phone
-  // screen never could. The hero's ripple motif drifts a few px as the page scrolls, eased
-  // toward its target each frame rather than tracking 1:1, capped small so it reads as a subtle
-  // live quality, not literal parallax. Contained by the hero's own overflow:hidden regardless
-  // of the exact numbers, so a miscalibration here can never cause a page-level overflow.
+  // The plate drifts and turns a few degrees as the page scrolls -- eased toward its target each
+  // frame, capped small. Contained by the hero's own overflow:clip whatever the numbers.
   if (!reduced){
-    var heroMotif = document.querySelector('#hero .motif');
-    if (heroMotif){
-      var driftTarget = 0, driftCurrent = 0, driftTicking = false;
-      var tickDrift = function(){
-        driftCurrent += (driftTarget - driftCurrent) * 0.12;
-        heroMotif.style.transform = 'translateY(' + driftCurrent.toFixed(2) + 'px)';
-        if (Math.abs(driftTarget - driftCurrent) > 0.05){ requestAnimationFrame(tickDrift); }
-        else { driftTicking = false; }
-      };
-      window.addEventListener('scroll', function(){
-        driftTarget = Math.min(window.scrollY * 0.06, 18);
-        if (!driftTicking){ driftTicking = true; requestAnimationFrame(tickDrift); }
-      }, {passive:true});
-    }
+    var heroArt = document.getElementById('heroArt');
+    var driftT = 0, driftC = 0, ticking = false;
+    var tick = function(){
+      driftC += (driftT - driftC) * 0.12;
+      heroArt.style.transform = 'translateY(' + (driftC*0.5).toFixed(2) + 'px) rotate(' + (driftC*0.06).toFixed(3) + 'deg)';
+      if (Math.abs(driftT - driftC) > 0.05){ requestAnimationFrame(tick); } else { ticking = false; }
+    };
+    window.addEventListener('scroll', function(){
+      driftT = Math.min(window.scrollY * 0.12, 40);
+      if (!ticking){ ticking = true; requestAnimationFrame(tick); }
+    }, {passive:true});
   }
 
   var FAM = {beef:'ember', fish:'frost', poultry:'clay', pork:'plum', beans:'sprout'};
@@ -590,18 +678,18 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function list(a){ return a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; }
+  function plateSvg(cls, extraClass){
+    return '<svg class="mp ' + (extraClass||'') + '" data-family="' + FAM[cls] + '" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/><use href="#mark-' + cls + '"/></svg>';
+  }
 
-  // Shows or hides a demo card, and only plays the settle-in animation on the actual
-  // hidden->visible transition -- render() runs on every interaction, including ones where
-  // a card was already showing, and re-animating a card that never changed state would look
-  // like it's flickering every time you touch a different flag. Skipped under reduced motion.
+  // Shows or hides a demo card, playing the settle-in only on the hidden->visible edge.
   function revealCard(el, show, spring){
     var was = !el.hidden;
     el.hidden = !show;
     if (show && !was && !reduced){
       var cls = spring ? 'settle-in--spring' : 'settle-in';
       el.classList.remove('settle-in', 'settle-in--spring');
-      void el.offsetWidth; // force reflow so the animation restarts if it was already used once
+      void el.offsetWidth;
       el.classList.add(cls);
     }
   }
@@ -616,16 +704,16 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 
   function compute(){
     var sel = FLAGS.filter(function(f){ return document.getElementById('f-' + f.id).checked; });
-    var rot = CYCLE.map(function(p){ return {name:p.name, cls:p.cls, stock:p.stock, from:null}; });
+    var rot = CYCLE.map(function(p){ return {name:p.name, cls:p.cls, stock:p.stock, from:null, fromCls:null}; });
     var r = {sel:sel, rot:rot, swaps:[], caps:[], besides:[], notes:[], minus:[], plus:[], gates:[], counts:{}};
     sel.forEach(function(f){
       f.swaps.forEach(function(s){
         var p = rot[s.slot];
         if (p.from) return;
         var fromStock = p.stock;
-        r.swaps.push({from:p.name, to:s.to.name, cls:s.to.cls, why:f.label + ': ' + f.why + '.'});
+        r.swaps.push({from:p.name, fromCls:p.cls, to:s.to.name, cls:s.to.cls, why:f.label + ': ' + f.why + '.'});
         if (r.gates.indexOf(fromStock) < 0) r.gates.push(fromStock);
-        p.from = p.name; p.name = s.to.name; p.cls = s.to.cls; p.stock = s.to.stock || fromStock;
+        p.from = p.name; p.fromCls = p.cls; p.name = s.to.name; p.cls = s.to.cls; p.stock = s.to.stock || fromStock;
       });
       f.caps.forEach(function(c){ if (r.caps.indexOf(c) < 0) r.caps.push(c); });
       if (f.beside && r.besides.indexOf(f.beside) < 0) r.besides.push(f.beside);
@@ -643,19 +731,40 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
       listcta = document.getElementById('listcta'),
       tonightcard = document.getElementById('tonightcard'), tonightMeta = document.getElementById('tonightMeta'),
       tonightName = document.getElementById('tonightName'), tonightUses = document.getElementById('tonightUses'),
+      tonightPlate = document.getElementById('tonightPlate'), tonightMark = document.getElementById('tonightMark'),
+      tonightArt = document.getElementById('tonightArt'), tonightCopy = document.getElementById('tonightCopy'),
       lowcard = document.getElementById('lowcard'), lowPills = document.getElementById('lowPills');
-  var lastR = null;
+  var lastR = null, prevNames = null;
 
   function render(){
     var r = compute();
     lastR = r;
+
+    // The strip: which plates actually changed since the last render, so only those move.
+    var changed = [];
+    if (prevNames){ r.rot.forEach(function(p, i){ if (prevNames[i] !== p.name) changed.push(i); }); }
+    prevNames = r.rot.map(function(p){ return p.name; });
     strip.innerHTML = r.rot.map(function(p, idx){
-      return '<div class="plate' + (p.from ? ' swapped' : '') + (idx === cursor ? ' tonight' : '') + '" data-family="' + FAM[p.cls] + '" title="' + esc(p.name) + '"><i></i></div>';
+      return '<div class="plate' + (p.from ? ' swapped' : '') + (idx === cursor ? ' tonight' : '') + '" data-slot="' + idx + '" title="' + esc(p.name) + '">' + plateSvg(p.cls) + '</div>';
     }).join('');
+    if (!reduced && changed.length){
+      changed.forEach(function(i, n){
+        var el = strip.querySelector('[data-slot="' + i + '"] .mp');
+        if (!el) return;
+        el.animate([
+          {transform:'scale(1)', offset:0},
+          {transform:'scale(.62) rotate(-8deg)', offset:.42},
+          {transform:'scale(1.06)', offset:.78},
+          {transform:'scale(1)', offset:1}
+        ], {duration:560, delay:n*60, easing:'cubic-bezier(.22,.72,.24,1)'});
+      });
+    }
     counts.textContent = ORDER.filter(function(k){ return r.counts[k]; }).map(function(k){ return r.counts[k] + ' ' + k; }).join(' · ');
 
     var tp = r.rot[cursor];
     tonightcard.setAttribute('data-family', FAM[tp.cls]);
+    tonightPlate.setAttribute('data-family', FAM[tp.cls]);
+    tonightMark.setAttribute('href', '#mark-' + tp.cls);
     tonightMeta.textContent = 'Meal ' + (cursor + 1) + ' of 14 · cycle ' + cycleNum;
     tonightName.textContent = tp.name;
     tonightUses.textContent = 'Uses ' + tp.stock + ' — ' + (STOCK[tp.stock] || 0) + ' on hand';
@@ -669,19 +778,17 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     if (!r.sel.length){
       html = '<p class="t-note empty">Pick a flag above and the cycle answers.</p>';
     } else {
-      // The actual dinner swap is the payoff moment, spring-eased and staggered; the
-      // secondary rows (beside dinner, a note) get the plain settle-in so the block still
-      // reads as one arrival, just with the real change given a touch more emphasis.
       var swapDelay = reduced ? '' : ' style="animation-delay:';
       html += r.swaps.map(function(s, i){
-        return '<div class="swap settle-in--spring"' + (swapDelay ? swapDelay + (i*70) + 'ms"' : '') + '><div class="plate" data-family="' + FAM[s.cls] + '"><i></i></div><div class="rowtext">' +
-          '<p class="t-title"><s>' + esc(s.from) + '</s> becomes ' + esc(s.to) + '</p><p class="t-note">' + esc(s.why) + '</p></div></div>';
+        return '<div class="swap settle-in--spring"' + (swapDelay ? swapDelay + (i*70) + 'ms"' : '') + '>' +
+          '<span class="mp-pair">' + plateSvg(s.fromCls, 'mp--sm') + '<svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>' + plateSvg(s.cls, 'mp--sm') + '</span>' +
+          '<div class="rowtext"><p class="t-title"><s>' + esc(s.from) + '</s> becomes ' + esc(s.to) + '</p><p class="t-note">' + esc(s.why) + '</p></div></div>';
       }).join('');
       html += r.besides.map(function(b){
-        return '<div class="swap settle-in"><div class="plate" data-family="clay"><i></i></div><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
+        return '<div class="swap settle-in"><span class="mp-pair">' + plateSvg('beans', 'mp--sm') + '</span><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
       }).join('');
       html += r.notes.map(function(n){
-        return '<div class="swap settle-in"><div class="plate" data-family="plum"><i></i></div><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
+        return '<div class="swap settle-in"><span class="mp-pair"><svg class="mp mp--sm" data-family="plum" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/></svg></span><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
       }).join('');
     }
     swapsEl.innerHTML = html;
@@ -706,26 +813,43 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
   picker.addEventListener('change', render);
   render();
 
+  // Log it: tonight's plate and its words leave to the left as one element and the next night
+  // arrives from the right -- one continuous move, not two states swapping. The stock and the
+  // cursor advance in between, while nothing is on screen.
+  var logging = false;
   document.getElementById('logBtn').addEventListener('click', function(){
-    var p = lastR.rot[cursor];
-    if (STOCK[p.stock] === undefined) STOCK[p.stock] = 0;
-    if (STOCK[p.stock] > 0){
-      STOCK[p.stock] -= 1;
-      if (STOCK[p.stock] === 0 && LOW.indexOf(p.stock) < 0) LOW.push(p.stock);
-    }
-    cursor += 1;
-    if (cursor >= CYCLE.length){ cursor = 0; cycleNum += 1; }
-    render();
+    if (logging) return;
+    var advance = function(){
+      var p = lastR.rot[cursor];
+      if (STOCK[p.stock] === undefined) STOCK[p.stock] = 0;
+      if (STOCK[p.stock] > 0){
+        STOCK[p.stock] -= 1;
+        if (STOCK[p.stock] === 0 && LOW.indexOf(p.stock) < 0) LOW.push(p.stock);
+      }
+      cursor += 1;
+      if (cursor >= CYCLE.length){ cursor = 0; cycleNum += 1; }
+      render();
+    };
+    if (reduced || !tonightArt.animate){ advance(); return; }
+    logging = true;
+    var outK = [{transform:'translateX(0)', opacity:1}, {transform:'translateX(-34px)', opacity:0}];
+    var inK  = [{transform:'translateX(34px)', opacity:0}, {transform:'translateX(0)', opacity:1}];
+    var ease = 'cubic-bezier(.22,.72,.24,1)', easeOut = 'cubic-bezier(.16,1,.3,1)';
+    var a1 = tonightArt.animate(outK, {duration:200, easing:ease, fill:'forwards'});
+    var a2 = tonightCopy.animate(outK, {duration:200, delay:30, easing:ease, fill:'forwards'});
+    a2.finished.then(function(){
+      advance();
+      a1.cancel(); a2.cancel();
+      tonightArt.animate(inK, {duration:420, easing:easeOut});
+      tonightCopy.animate(inK, {duration:420, delay:40, easing:easeOut});
+      logging = false;
+    });
   });
 
   document.getElementById('saveListLink').addEventListener('click', function(){
     setTimeout(function(){ document.getElementById('email').focus({preventScroll:true}); }, 400);
   });
 
-  // Empty when nothing was picked or logged: the confirmation card sits well below the
-  // demo by the time anyone reaches the form (past "Why this exists" and "Your data"),
-  // and the email has no page around it at all, so a line that only means something
-  // beside the demo itself is dropped rather than shown out of context in either place.
   function recapText(r){
     var bits = [];
     var loggedAny = (cursor !== 0 || cycleNum > 1);
