@@ -29,7 +29,7 @@
   --shade:#12150E;
   --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px; --r-pill:999px;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px; --s10:96px;
-  --gutter:16px; --gap:12px; --pad:var(--gutter);
+  --gutter:16px; --gap:24px; --pad:var(--gutter);
   --lift-1:0 1px 2px rgba(18,21,14,.04), 0 6px 16px rgba(18,21,14,.05);
   --lift-2:0 2px 6px rgba(18,21,14,.06), 0 18px 40px rgba(18,21,14,.10);
   --lift-3:0 8px 20px rgba(18,21,14,.10), 0 34px 70px rgba(18,21,14,.18);
@@ -111,7 +111,7 @@ h1,h2,h3,p{margin:0}
 .stack{display:flex; flex-direction:column; gap:var(--gap)}
 .split{display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:var(--s2) var(--s3)}
 
-header{padding:24px 0 8px}
+header{padding:32px 0 16px}
 header .wrap{display:flex; align-items:center; justify-content:space-between}
 .brand{font-weight:800; letter-spacing:.16em; font-size:13px}
 .status-pip{display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px;
@@ -119,11 +119,11 @@ header .wrap{display:flex; align-items:center; justify-content:space-between}
 .status-pip::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
 
 main{padding-bottom:64px}
-main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var(--s7)}
+main > .wrap{display:flex; flex-direction:column; gap:var(--s9); padding-top:var(--s7)}
 main > .band + .wrap{padding-top:0}
 
 /* ---------- the hero: a subject on the field, not a box ------------------------------ */
-.hero{overflow:clip; position:relative; padding:0 0 var(--s4)}
+.hero{overflow:clip; position:relative; padding:0 0 var(--s6)}
 .hero-in{max-width:640px; margin:0 auto; padding:0 var(--pad); position:relative}
 /* Sized so the headline's first line sits well above the fold on a phone: the plate is the
    opener, not the whole screen. The copy overlaps the plate's shadow tail for depth. */
@@ -182,14 +182,14 @@ main > .band + .wrap{padding-top:0}
 .btn-ghost{background:none; color:var(--ink); opacity:.8; text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px; height:auto; padding:0; box-shadow:none}
 .cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
 
-.card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s5); box-shadow:var(--lift-1);
+.card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s6); box-shadow:var(--lift-1);
   position:relative; overflow:hidden}
 .card--tint{background:var(--wash); box-shadow:none}
 .card--solid{background:var(--ink); color:var(--enamel); box-shadow:var(--lift-2)}
 .card--solid .t-label{color:inherit; opacity:.55}
 /* Your data: a band across the whole page rather than a card in the column, with its own .wrap
    inside so its content sits on the same axis as everything else. Edge to edge at every width. */
-.band{border-radius:var(--r-xl); margin:var(--s8) 0; padding:var(--s5) 0}
+.band{border-radius:var(--r-xl); margin:var(--s9) 0; padding:var(--s6) 0}
 .band > .wrap{padding-top:0; padding-bottom:0}
 
 .chip{width:46px; height:46px; border-radius:var(--r-md); background:var(--wash); color:var(--core);
@@ -197,7 +197,7 @@ main > .band + .wrap{padding-top:0}
 .chip--onsolid{background:rgba(255,255,255,.14); color:var(--enamel)}
 .chip svg{width:24px; height:24px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round}
 
-.row{display:flex; align-items:flex-start; gap:var(--s4); padding:var(--s4) 0; width:100%}
+.row{display:flex; align-items:flex-start; gap:var(--s4); padding:var(--s5) 0; width:100%}
 .row + .row{border-top:1px solid var(--hair)}
 .card--solid .row + .row{border-top-color:rgba(255,255,255,.12)}
 .row .rowtext{flex:1; min-width:0}
@@ -213,14 +213,14 @@ main > .band + .wrap{padding-top:0}
 .section-head .t-label{margin-bottom:6px}
 
 /* Steps: on the field, no box, no dividers -- spacing does the separating. */
-.steps{list-style:none; margin:var(--s2) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--s5)}
+.steps{list-style:none; margin:var(--s3) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--s6)}
 .steps li{display:flex; gap:var(--s4); align-items:flex-start}
 .steps .rowtext{flex:1; min-width:0}
 .steps .t-title{font-size:17px; font-weight:680}
 .steps .t-note{margin-top:4px; color:var(--ink-2); font-size:14.5px}
 
 /* Why: a statement and two short answers, on the field. */
-.why{display:grid; grid-template-columns:1fr; gap:var(--s5); padding:0; margin-top:var(--s5)}
+.why{display:grid; grid-template-columns:1fr; gap:var(--s6); padding:0; margin-top:var(--s6)}
 @media (min-width:600px){.why{grid-template-columns:1fr 1fr; gap:var(--s7)}}
 .why-item .t-label{color:var(--fam-ink)}
 .why-item p.t-body{margin-top:8px; color:var(--ink-2)}
@@ -316,8 +316,8 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   main > .wrap{gap:var(--s10); padding-top:var(--s9)}
   header{padding:32px 0 8px}
   .brand{font-size:14px}
-  section.stack{gap:var(--s6)}
-  .stack > .section-head{margin-bottom:var(--s3)}
+  section.stack{gap:var(--s7)}
+  .stack > .section-head{margin-bottom:var(--s4)}
   .t-display{font-size:38px}
   .t-statement{font-size:clamp(40px, 3.4vw, 56px)}
   .t-body{font-size:16.5px}
@@ -681,7 +681,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '28';
+  var BUILD = '29';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
