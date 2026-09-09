@@ -25,6 +25,8 @@
   --on-lit:#12150E; --on-deep:#FFFFFF;
   /* the plate: ceramic, lit from the top left */
   --plate:#FFFFFF; --plate-rim:#ECEDE7; --plate-edge:#D5D7CF; --plate-well:#E3E5DE;
+  /* cast shadows: a shade on the light ground, a soft spill of light on the dark one */
+  --shade:#12150E;
   --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px; --r-pill:999px;
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:44px; --s9:64px;
   --gutter:16px; --gap:12px;
@@ -47,7 +49,7 @@
   --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
   --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
   --on-lit:#12150E; --on-deep:#0B0D0A;
-  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4;
+  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4; --shade:#E9ECE4;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
   --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
@@ -63,7 +65,7 @@
   --clay-wash:#241D12;   --clay-lit:#CBB694;   --clay:#BC9A6B;   --clay-deep:#9E7C4A;   --clay-ink:#D9C09A;
   --plum-wash:#241820;   --plum-lit:#CD9DAE;   --plum:#B27E92;   --plum-deep:#95596E;   --plum-ink:#D7A9BA;
   --on-lit:#12150E; --on-deep:#0B0D0A;
-  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4;
+  --plate:#ECEEE8; --plate-rim:#D3D6CD; --plate-edge:#B6BAAF; --plate-well:#CBCFC4; --shade:#E9ECE4;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
   --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
@@ -122,10 +124,12 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
 /* ---------- the hero: a subject on the field, not a box ------------------------------ */
 .hero{overflow:clip; position:relative; padding:0 0 var(--s4)}
 .hero-in{max-width:640px; margin:0 auto; padding:0 var(--gutter); position:relative}
-.hero-art{position:relative; width:min(104vw,520px); margin:0 -18vw 0 auto; z-index:1;
-  filter:drop-shadow(0 30px 40px rgba(18,21,14,.12))}
+/* Sized so the headline's first line sits well above the fold on a phone: the plate is the
+   opener, not the whole screen. The copy overlaps the plate's shadow tail for depth. */
+.hero-art{position:relative; width:min(86vw,400px); margin:-8px -12vw 0 auto; z-index:1;
+  filter:drop-shadow(0 24px 34px rgba(18,21,14,.12))}
 .hero-art svg{display:block; width:100%; height:auto}
-.hero-copy{position:relative; z-index:2; margin-top:-28px}
+.hero-copy{position:relative; z-index:2; margin-top:-44px}
 .hero-eyebrow{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
   letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
 .hero-eyebrow .pip{width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
@@ -135,13 +139,20 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s8); padding-top:var
   font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:500}
 .tpill.out{background:var(--sunk); color:var(--ember-deep)}
 .tpill.in{background:var(--ink); color:var(--sprout-lit)}
+/* Ink is light in dark mode, so "dark pill, lime text" would become pale on pale. The lime
+   moment inverts instead: lime pill, dark text. Same for a checked flag chip. */
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .tpill.in,
+  :root:not([data-theme="light"]) .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E} }
+:root[data-theme="dark"] .tpill.in, :root[data-theme="dark"] .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E}
 .tpill i{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
 .tarrow{color:var(--ink-3); flex:none}
 .tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
 .hero p.lede{margin-top:var(--s4); font-size:16.5px; line-height:1.55; color:var(--ink-2); max-width:46ch}
 @media (min-width:800px){
-  .hero-in{display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:var(--s6); padding-top:var(--s6)}
-  .hero-art{width:min(52vw,560px); margin:0 -8vw 0 auto; grid-column:2}
+  /* Wider than the rest of the page on purpose: the opener gets the room, the reading column
+     below stays at 640. Copy gets ~460px so the headline breaks in three lines, not five. */
+  .hero-in{max-width:1040px; display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:var(--s7); padding-top:var(--s7)}
+  .hero-art{width:min(46vw,520px); margin:0 -6vw 0 auto; grid-column:2}
   .hero-copy{grid-column:1; grid-row:1; margin-top:0}
 }
 
@@ -293,43 +304,43 @@ footer .foot-row{display:flex; justify-content:space-between; align-items:baseli
 footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--ink-3); opacity:.7}
 </style>
 
-<!-- the drawn plate: one base and five marks, coloured by whatever data-family the <svg> carries -->
+<!-- the drawn plate: one base and five marks, coloured by whatever data-family the svg element carries -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <filter id="fx-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
     <symbol id="mp-base" viewBox="0 0 100 100">
-      <ellipse cx="53" cy="56" rx="43" ry="41" style="fill:var(--ink)" opacity=".16" filter="url(#fx-soft)"/>
+      <ellipse cx="53" cy="56" rx="43" ry="41" style="fill:var(--shade)" opacity=".16" filter="url(#fx-soft)"/>
       <circle cx="50" cy="50" r="44" style="fill:var(--plate)"/>
       <circle cx="50" cy="50" r="44" fill="none" style="stroke:var(--plate-edge)" stroke-width="1.6"/>
       <circle cx="50" cy="50" r="33" fill="none" style="stroke:var(--plate-well)" stroke-width="2.2"/>
       <path d="M21 36 A33 33 0 0 1 36 21" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".95"/>
     </symbol>
     <symbol id="mark-beef" viewBox="0 0 100 100">
-      <ellipse cx="53" cy="57" rx="24" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="53" cy="57" rx="24" ry="15" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
       <rect x="29" y="36" width="44" height="29" rx="10" style="fill:var(--core)" transform="rotate(-12 50 50)"/>
       <path d="M38 52 Q50 43 64 52" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45" transform="rotate(-12 50 50)"/>
       <rect x="34" y="40" width="16" height="4" rx="2" fill="#fff" opacity=".4" transform="rotate(-12 50 50)"/>
     </symbol>
     <symbol id="mark-fish" viewBox="0 0 100 100">
-      <ellipse cx="52" cy="56" rx="24" ry="13" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="52" cy="56" rx="24" ry="13" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
       <path d="M25 51 Q38 31 74 39 Q79 55 61 64 Q38 69 25 51Z" style="fill:var(--core)"/>
       <path d="M44 42 Q52 51 44 61" stroke="#fff" stroke-width="2.2" fill="none" opacity=".55"/>
       <path d="M58 41 Q64 50 58 59" stroke="#fff" stroke-width="2.2" fill="none" opacity=".45"/>
       <path d="M32 46 Q45 37 62 40" stroke="#fff" stroke-width="3" fill="none" opacity=".4" stroke-linecap="round"/>
     </symbol>
     <symbol id="mark-poultry" viewBox="0 0 100 100">
-      <ellipse cx="53" cy="58" rx="23" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="53" cy="58" rx="23" ry="15" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
       <path d="M29 58 Q28 34 55 32 Q75 32 74 49 Q73 67 50 68 Q33 68 29 58Z" style="fill:var(--core)"/>
       <path d="M36 46 Q46 38 60 41" stroke="#fff" stroke-width="3" fill="none" opacity=".42" stroke-linecap="round"/>
     </symbol>
     <symbol id="mark-pork" viewBox="0 0 100 100">
-      <ellipse cx="53" cy="57" rx="25" ry="15" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="53" cy="57" rx="25" ry="15" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
       <ellipse cx="50" cy="50" rx="25" ry="17" style="fill:var(--core)" transform="rotate(-18 50 50)"/>
       <path d="M31 47 Q40 38 54 40" stroke="#fff" stroke-width="3" fill="none" opacity=".42" stroke-linecap="round" transform="rotate(-18 50 50)"/>
       <ellipse cx="62" cy="55" rx="7" ry="4.5" fill="#fff" opacity=".35" transform="rotate(-18 50 50)"/>
     </symbol>
     <symbol id="mark-beans" viewBox="0 0 100 100">
-      <ellipse cx="52" cy="58" rx="22" ry="13" style="fill:var(--ink)" opacity=".14" filter="url(#fx-soft)"/>
+      <ellipse cx="52" cy="58" rx="22" ry="13" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
       <ellipse cx="40" cy="45" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(-20 40 45)"/>
       <ellipse cx="59" cy="47" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(15 59 47)"/>
       <ellipse cx="49" cy="59" rx="10" ry="6.5" style="fill:var(--core)" transform="rotate(-5 49 59)"/>
@@ -369,22 +380,22 @@ footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; col
             </linearGradient>
           </defs>
           <!-- cast shadow, light from the top left -->
-          <ellipse cx="234" cy="250" rx="176" ry="162" style="fill:var(--ink)" opacity=".22" filter="url(#fx-cast)"/>
+          <ellipse cx="234" cy="250" rx="176" ry="162" style="fill:var(--shade)" opacity=".22" filter="url(#fx-cast)"/>
           <!-- the plate -->
           <circle cx="220" cy="220" r="184" fill="url(#rim)"/>
           <circle cx="220" cy="220" r="146" fill="url(#well)"/>
           <path d="M92 162 A158 158 0 0 1 162 92" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".95"/>
           <!-- greens, underneath -->
           <g transform="translate(220 226)">
-            <ellipse cx="-44" cy="30" rx="48" ry="22" transform="rotate(-28)" fill="#6FAA14"/>
-            <ellipse cx="-60" cy="-8" rx="40" ry="18" transform="rotate(18)" fill="#4F7A0C"/>
+            <ellipse cx="-48" cy="34" rx="50" ry="22" transform="rotate(-28)" fill="#6FAA14"/>
+            <ellipse cx="-78" cy="-4" rx="42" ry="17" transform="rotate(26)" fill="#4F7A0C"/>
             <ellipse cx="36" cy="50" rx="44" ry="20" transform="rotate(-10)" fill="#79B517"/>
             <ellipse cx="-40" cy="22" rx="20" ry="6" transform="rotate(-28)" fill="#fff" opacity=".2"/>
             <ellipse cx="40" cy="44" rx="18" ry="5" transform="rotate(-10)" fill="#fff" opacity=".18"/>
           </g>
           <!-- salmon -->
           <g transform="translate(222 206) rotate(-14)">
-            <ellipse cx="4" cy="12" rx="86" ry="46" style="fill:var(--ink)" opacity=".16" filter="url(#fx-under)"/>
+            <ellipse cx="4" cy="14" rx="86" ry="44" style="fill:var(--shade)" opacity=".11" filter="url(#fx-under)"/>
             <path d="M-86 -34 Q-40 -52 22 -46 Q86 -38 92 -4 Q94 32 42 44 Q-30 54 -82 32 Q-102 8 -86 -34Z" fill="url(#salmon)"/>
             <path d="M-54 -26 Q-32 4 -50 34" stroke="#FDE7E0" stroke-width="3" fill="none" opacity=".75"/>
             <path d="M-16 -36 Q6 0 -14 40" stroke="#FDE7E0" stroke-width="3" fill="none" opacity=".72"/>
@@ -393,7 +404,7 @@ footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; col
           </g>
           <!-- lemon -->
           <g transform="translate(304 296)">
-            <ellipse cx="5" cy="7" rx="35" ry="31" style="fill:var(--ink)" opacity=".14" filter="url(#fx-under)"/>
+            <ellipse cx="5" cy="7" rx="35" ry="31" style="fill:var(--shade)" opacity=".14" filter="url(#fx-under)"/>
             <circle r="33" fill="#F6D64C"/>
             <circle r="27.5" fill="none" stroke="#FFF6C7" stroke-width="4.2"/>
             <g stroke="#E4BE2C" stroke-width="2.2" stroke-linecap="round"><path d="M0 -25V25M-25 0H25M-17.5 -17.5L17.5 17.5M-17.5 17.5L17.5 -17.5"/></g>
@@ -584,7 +595,7 @@ footer .build{font-family:var(--mono); font-size:11px; letter-spacing:.06em; col
 
 <script>
 (function(){
-  var BUILD = '21';
+  var BUILD = '22';
   document.getElementById('build').textContent = 'build ' + BUILD;
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
