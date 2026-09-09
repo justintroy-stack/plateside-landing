@@ -20,6 +20,7 @@
   --gutter:16px; --gap:12px;
   --lift-1:0 1px 2px rgba(18,21,14,.04), 0 6px 16px rgba(18,21,14,.05);
   --lift-2:0 2px 6px rgba(18,21,14,.06), 0 18px 40px rgba(18,21,14,.10);
+  --lift-3:0 8px 20px rgba(18,21,14,.10), 0 34px 70px rgba(18,21,14,.18);
   --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
   --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   --d-press:120ms; --d-state:220ms; --d-enter:380ms; --d-hero:620ms;
@@ -37,6 +38,7 @@
   --on-lit:#12150E; --on-deep:#0B0D0A;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
+  --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
@@ -50,6 +52,7 @@
   --on-lit:#12150E; --on-deep:#0B0D0A;
   --lift-1:0 1px 2px rgba(0,0,0,.40), 0 6px 16px rgba(0,0,0,.30);
   --lift-2:0 2px 6px rgba(0,0,0,.50), 0 18px 40px rgba(0,0,0,.40);
+  --lift-3:0 8px 20px rgba(0,0,0,.55), 0 34px 70px rgba(0,0,0,.50);
 }
 [data-family="sprout"]{--wash:var(--sprout-wash);--lit:var(--sprout-lit);--core:var(--sprout);--deep:var(--sprout-deep);--fam-ink:var(--sprout-ink)}
 [data-family="ember"] {--wash:var(--ember-wash); --lit:var(--ember-lit); --core:var(--ember); --deep:var(--ember-deep); --fam-ink:var(--ember-ink)}
@@ -68,6 +71,11 @@ h1,h2,h3,p{margin:0}
 }
 
 .t-hero{font-size:clamp(38px,9vw,56px);line-height:.94;font-weight:800;letter-spacing:-.035em;text-wrap:balance}
+/* Type scale is free against the color budget -- it isn't a fill, so it never touches the
+   one-loud-card rule. Used exactly once, on the page's actual best line, so the boldness of the
+   copy and the boldness of the setting match. Sits between t-display and t-hero on purpose: part
+   of the same family, just louder. */
+.t-statement{font-size:clamp(32px,6.5vw,44px);line-height:1.05;font-weight:760;letter-spacing:-.03em;text-wrap:balance}
 .t-display{font-size:clamp(24px,4vw,30px);line-height:1.1;font-weight:720;letter-spacing:-.02em}
 .t-title{font-size:20px;line-height:1.2;font-weight:660;letter-spacing:-.015em}
 .t-body{font-size:15.5px;line-height:1.55}
@@ -101,11 +109,40 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .card--lit .t-label{color:inherit; opacity:.6}
 .card--solid .t-label{color:inherit; opacity:.55}
 
+/* The two loud cards on the page, and the only two that get physically bigger than the column
+   they sit in -- bleeding past it is a second, independent signal of "this one matters" that
+   doesn't depend on color, stacked on top of the color signal instead of replacing it. Cancels
+   just the gutter below 800px (reaches the true screen edge, never past it); at 800px+ .wrap has
+   already reached its own 640px max-width, so a fixed 96px margin lands exactly 80px past the
+   column's own edge at that width and only grows safer (further from the viewport edge) above
+   it -- verified arithmetically, not just eyeballed, before picking 800 as the breakpoint. */
+#hero, #yourdata{
+  border-radius:var(--r-xl);
+  margin-left:calc(-1 * var(--gutter)); margin-right:calc(-1 * var(--gutter));
+}
+@media (min-width:800px){
+  #hero, #yourdata{ margin-left:-96px; margin-right:-96px; }
+}
+/* Flat --ink has nothing to tint -- color-mixing black into itself is a no-op, so #yourdata
+   keeps --lift-2 unchanged and only #hero gets a shadow rebuilt to glow its own color instead
+   of a generic gray drop-shadow. */
+#hero{box-shadow:0 3px 10px color-mix(in srgb, var(--sprout-deep) 25%, transparent),
+  0 24px 56px color-mix(in srgb, var(--sprout-deep) 35%, transparent)}
+
 .motif{position:absolute; inset:0; pointer-events:none;
   background:
     radial-gradient(circle at 88% 12%, rgba(255,255,255,.55) 0 21%, transparent 21.5%),
     radial-gradient(circle at 88% 12%, transparent 0 28%, rgba(255,255,255,.32) 28.5% 31%, transparent 31.5%),
     radial-gradient(circle at 88% 12%, transparent 0 38%, rgba(255,255,255,.16) 38.5% 40%, transparent 40.5%)}
+/* Adapted, not copied: the hero's motif uses white against a saturated --lit background; a wash
+   background is already pale, so white rings would barely register. This mixes --core (a more
+   saturated tone than the wash) against transparent instead, reading as a faint deeper shade of
+   the same color rather than a highlight. Used only on #tonightcard -- the one other card
+   actually about a specific dish, where the motif's own meaning applies. */
+.motif--tint{background:
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--core) 22%, transparent) 0 21%, transparent 21.5%),
+    radial-gradient(circle at 88% 12%, transparent 0 28%, color-mix(in srgb, var(--core) 14%, transparent) 28.5% 31%, transparent 31.5%),
+    radial-gradient(circle at 88% 12%, transparent 0 38%, color-mix(in srgb, var(--core) 8%, transparent) 38.5% 40%, transparent 40.5%)}
 .hero-in{position:relative; z-index:2}
 .hero-eyebrow{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
   letter-spacing:.12em; text-transform:uppercase; color:var(--on-lit); opacity:.62}
@@ -146,7 +183,17 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .chip{width:38px; height:38px; border-radius:var(--r-sm); background:var(--wash); color:var(--core);
   display:grid; place-items:center; flex:none}
 .chip--onsolid{background:rgba(255,255,255,.14); color:var(--enamel)}
+.chip--lg{width:46px; height:46px; border-radius:var(--r-md)}
 .chip svg{width:19px; height:19px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round}
+.chip--lg svg{width:24px; height:24px}
+
+/* The page's one richest interactive element -- the demo's Log it and the real signup submit,
+   the two places someone actually commits to something, not tied to the app's own button in
+   meaning: reasoned fresh for a page seen once, where the final action deserves the most
+   confident treatment on the page, not the least. */
+.btn-signature{background:linear-gradient(180deg, var(--ember-deep), var(--ember-ink)); color:var(--on-deep);
+  box-shadow:0 4px 16px color-mix(in srgb, var(--ember-deep) 38%, transparent), var(--lift-3)}
+.btn-signature:hover{opacity:.94}
 
 .row{display:flex; align-items:flex-start; gap:var(--s4); padding:var(--s4) 0; width:100%}
 .row + .row{border-top:1px solid var(--hair)}
@@ -197,7 +244,15 @@ main > .wrap{display:flex; flex-direction:column; gap:var(--s6)}
 .flagchip input:focus-visible + span{outline:2px solid var(--ember); outline-offset:2px}
 
 .counts{font-size:12px; color:var(--ink-3); text-align:right}
+/* Padding rhythm across an otherwise-identical run of cards, instead of uniform --s5 everywhere:
+   tight for a control strip, loose for the section's actual centerpiece. Breaks the sameness for
+   free, no color or new tokens involved. */
+#flagpickercard{padding:var(--s4)}
+#cyclecard{padding:var(--s6)}
 .strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:var(--s3)}
+/* Bleeds to #cyclecard's own edges (contained inside its own card, distinct from the two
+   page-level bleed cards) -- reads as a full shelf instead of an inset grid. */
+#cyclecard .strip{margin-left:calc(-1 * var(--s6)); margin-right:calc(-1 * var(--s6))}
 .plate{aspect-ratio:1; border-radius:var(--r-xs); background:var(--wash); display:grid; place-items:center; position:relative;
   transition:background-color var(--d-state) var(--ez)}
 .plate i{width:10px; height:10px; border-radius:50%; background:var(--core); transition:background-color var(--d-state) var(--ez)}
@@ -303,13 +358,14 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
       <p class="t-body" style="margin-top:8px; color:var(--ink-2)">This is the real mechanism, run on an example kitchen. Log a plate and watch the stock count down toward a store run. Then flag what's on a lab panel and watch future nights swap too. Not your plan — nothing here leaves this page.</p>
     </div>
     <div class="card card--tint" data-family="sprout" id="tonightcard">
+      <div class="motif motif--tint"></div>
       <div class="split">
         <div>
           <p class="mono" id="tonightMeta" style="font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)"></p>
           <h3 class="t-title" id="tonightName" style="margin-top:6px; font-size:22px"></h3>
           <p class="t-note" id="tonightUses" style="margin-top:4px"></p>
         </div>
-        <button class="btn btn-ink" id="logBtn" style="height:44px; padding:0 20px; font-size:14px; flex:none">Log it</button>
+        <button class="btn btn-signature" id="logBtn" style="height:44px; padding:0 20px; font-size:14px; flex:none">Log it</button>
       </div>
     </div>
     <div class="card card--tint" data-family="clay" id="lowcard" hidden>
@@ -319,7 +375,10 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     </div>
     <div class="card" id="flagpickercard"><div class="flagpicker" id="flagpicker"></div></div>
     <div class="card" id="cyclecard">
-      <div class="split"><p class="t-label">An example cycle · 14 dinners</p><p class="mono counts" id="counts"></p></div>
+      <div class="split">
+        <div><p class="t-label">An example cycle</p><p class="num num--md" style="margin-top:2px">14<span style="font-size:14px; font-weight:600; letter-spacing:0; opacity:.55"> dinners</span></p></div>
+        <p class="mono counts" id="counts"></p>
+      </div>
       <div class="strip" id="strip"></div>
       <div class="legend">
         <span data-family="ember"><i></i>beef</span><span data-family="frost"><i></i>fish</span><span data-family="clay"><i></i>poultry</span><span data-family="plum"><i></i>pork</span><span data-family="sprout"><i></i>beans</span>
@@ -333,7 +392,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
         <div class="rowtext"><p class="t-label">The rule that makes it work</p><p class="t-body" id="gateline" style="margin-top:4px"></p></div>
       </div>
     </div>
-    <div class="card" id="listcard" hidden>
+    <div class="card card--tint" data-family="clay" id="listcard" hidden>
       <p class="t-label">What a flag changes at the store</p>
       <div class="delta" id="delta"></div>
     </div>
@@ -344,7 +403,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
   </section>
 
   <section class="stack">
-    <div class="section-head"><p class="t-label">Why this exists</p><h2 class="t-display">"Eat better" isn't an instruction. It's a homework assignment with no due date.</h2></div>
+    <div class="section-head"><p class="t-label">Why this exists</p><h2 class="t-statement">"Eat better" isn't an instruction. It's a homework assignment with no due date.</h2></div>
     <div class="why-grid">
       <div class="card card--tint" data-family="ember">
         <p class="t-label">The gap</p>
@@ -400,7 +459,7 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
             <option value="more">More, if it genuinely worked</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-ink" style="align-self:flex-start">Get early access</button>
+        <button type="submit" class="btn btn-signature" style="align-self:flex-start">Get early access</button>
       </form>
     </div>
     <div id="saved" hidden>
@@ -458,6 +517,29 @@ footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
     reveal('#tonightcard, #flagpickercard, #cyclecard', 90);
     reveal('.why-grid .card', 100);
     reveal('#yourdata, #signup', 0);
+  }
+
+  // The one thing here with no app equivalent to reuse: the app has no scrolling screens, so a
+  // scroll-linked effect isn't a borrowed pattern, it's what a long page can do that a phone
+  // screen never could. The hero's ripple motif drifts a few px as the page scrolls, eased
+  // toward its target each frame rather than tracking 1:1, capped small so it reads as a subtle
+  // live quality, not literal parallax. Contained by the hero's own overflow:hidden regardless
+  // of the exact numbers, so a miscalibration here can never cause a page-level overflow.
+  if (!reduced){
+    var heroMotif = document.querySelector('#hero .motif');
+    if (heroMotif){
+      var driftTarget = 0, driftCurrent = 0, driftTicking = false;
+      var tickDrift = function(){
+        driftCurrent += (driftTarget - driftCurrent) * 0.12;
+        heroMotif.style.transform = 'translateY(' + driftCurrent.toFixed(2) + 'px)';
+        if (Math.abs(driftTarget - driftCurrent) > 0.05){ requestAnimationFrame(tickDrift); }
+        else { driftTicking = false; }
+      };
+      window.addEventListener('scroll', function(){
+        driftTarget = Math.min(window.scrollY * 0.06, 18);
+        if (!driftTicking){ driftTicking = true; requestAnimationFrame(tickDrift); }
+      }, {passive:true});
+    }
   }
 
   var FAM = {beef:'ember', fish:'frost', poultry:'clay', pork:'plum', beans:'sprout'};
