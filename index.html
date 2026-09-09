@@ -130,24 +130,18 @@ main > .band + .wrap{padding-top:0}
 .hero-art{position:relative; width:min(86vw,400px); margin:-8px -12vw 0 auto; z-index:1;
   filter:drop-shadow(0 24px 34px rgba(18,21,14,.12))}
 .hero-art svg{display:block; width:100%; height:auto}
+/* Overlaps the plate's own shadow tail for depth -- the headline is now the first thing in
+   .hero-copy, no eyebrow above it and no transit pills below: Duncan Rogoff (Claude Code Club)
+   read those as generic AI-landing-page furniture (small-caps badge, a criss-crossing eye path
+   through a huge headline to a pair of state pills) and Justin agreed, on top of the eyebrow
+   being flatly redundant with the header's own "not live yet" pip already on screen at the same
+   time. The state-change idea the pills carried ("running low" -> "list ready") isn't lost: the
+   lede still names it in words, and the actual demo below delivers it for real, once, when
+   someone taps Log it -- better than a static preview of the same moment at the top of the page. */
 .hero-copy{position:relative; z-index:2; margin-top:-44px}
-.hero-eyebrow{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px;
-  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
-.hero-eyebrow .pip{width:6px; height:6px; border-radius:50%; background:var(--ember-deep); flex:none}
-.hero-copy .t-hero{margin-top:var(--s3)}
-.transit{display:flex; align-items:center; gap:10px; margin-top:var(--s5)}
-.tpill{display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 14px; border-radius:var(--r-pill);
-  font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:500}
-.tpill.out{background:var(--sunk); color:var(--ember-deep)}
-.tpill.in{background:var(--ink); color:var(--sprout-lit)}
-/* Ink is light in dark mode, so "dark pill, lime text" would become pale on pale. The lime
-   moment inverts instead: lime pill, dark text. Same for a checked flag chip. */
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .tpill.in,
-  :root:not([data-theme="light"]) .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E} }
-:root[data-theme="dark"] .tpill.in, :root[data-theme="dark"] .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E}
-.tpill i{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
-.tarrow{color:var(--ink-3); flex:none}
-.tarrow svg{width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round}
+/* Ink is light in dark mode, so a checked flag chip inverts: lime background, dark text. */
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E} }
+:root[data-theme="dark"] .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E}
 .hero p.lede{margin-top:var(--s4); font-size:16.5px; line-height:1.55; color:var(--ink-2); max-width:46ch}
 
 /* Entrance: the plate settles onto the counter first, the words read in after it. Pure CSS so
@@ -155,11 +149,9 @@ main > .band + .wrap{padding-top:0}
 @keyframes plateIn{from{opacity:0; transform:translateY(28px) rotate(-4deg) scale(.94)}}
 @keyframes fadeRise{from{opacity:0; transform:translateY(16px)}}
 .hero-art{animation:plateIn var(--d-plate) var(--ez-out) both}
-.hero-copy .hero-eyebrow{animation:fadeRise var(--d-hero) var(--ez-out) 180ms both}
-.hero-copy .t-hero{animation:fadeRise var(--d-hero) var(--ez-out) 260ms both}
-.hero-copy .transit{animation:fadeRise var(--d-hero) var(--ez-out) 340ms both}
-.hero-copy .lede{animation:fadeRise var(--d-hero) var(--ez-out) 420ms both}
-.hero-copy .cta-row{animation:fadeRise var(--d-hero) var(--ez-out) 500ms both}
+.hero-copy .t-hero{animation:fadeRise var(--d-hero) var(--ez-out) 140ms both}
+.hero-copy .lede{animation:fadeRise var(--d-hero) var(--ez-out) 280ms both}
+.hero-copy .cta-row{animation:fadeRise var(--d-hero) var(--ez-out) 400ms both}
 
 /* ---------- buttons: light and material, no gradient wash ---------------------------- */
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; padding:0 26px;
@@ -213,11 +205,12 @@ main > .band + .wrap{padding-top:0}
 .section-head .t-label{margin-bottom:6px}
 
 /* Steps: on the field, no box, no dividers -- spacing does the separating. */
-.steps{list-style:none; margin:var(--s3) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--s6)}
-.steps li{display:flex; gap:var(--s4); align-items:flex-start}
-.steps .rowtext{flex:1; min-width:0}
-.steps .t-title{font-size:17px; font-weight:680}
-.steps .t-note{margin-top:4px; color:var(--ink-2); font-size:14.5px}
+/* A quick, scannable rhythm beat between the hero and the demo, not a second explanation --
+   the hero's own lede and the interactive demo below already say this in full. Icon and a
+   short label only, wrapped in a row rather than five tall stacked cards. */
+.steps{list-style:none; margin:var(--s4) 0 0; padding:0; display:flex; flex-wrap:wrap; gap:var(--s5) var(--s7)}
+.steps li{display:flex; align-items:center; gap:var(--s3)}
+.steps .t-title{font-size:16px; font-weight:660}
 
 /* Why: a statement and two short answers, on the field. */
 .why{display:grid; grid-template-columns:1fr; gap:var(--s6); padding:0; margin-top:var(--s6)}
@@ -331,13 +324,9 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   .t-hero{font-size:clamp(48px, 5.3vw, 80px)}
   .hero p.lede{font-size:18px; max-width:44ch}
 
-  .steps{display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:var(--s8) var(--s7); margin-top:0}
-  .steps li{grid-column:span 2; flex-direction:column; gap:var(--s4)}
-  .steps li:nth-child(4){grid-column:2 / span 2}
-  .steps li:nth-child(5){grid-column:4 / span 2}
+  .steps{gap:var(--s6) var(--s9); margin-top:0}
   .chip{width:52px; height:52px}
   .steps .t-title{font-size:19px}
-  .steps .t-note{font-size:15.5px}
 
   .demo-inputs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--s6); align-items:start}
   #flagblock{padding-top:var(--s2)}
@@ -530,13 +519,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
         </svg>
       </div>
       <div class="hero-copy">
-        <div class="hero-eyebrow"><span class="pip"></span>Early access</div>
         <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
-        <div class="transit">
-          <span class="tpill out"><i></i>Running low</span>
-          <span class="tarrow"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-          <span class="tpill in"><i></i>List ready</span>
-        </div>
         <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react, then flag what's on a panel and watch it get sharper too. No email needed for either part.</p>
         <div class="cta-row">
           <button class="btn btn-signature" id="ctaTop">Get early access
@@ -555,23 +538,23 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     <ol class="steps" id="howitworks">
       <li>
         <div class="chip" data-family="frost"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-kitchen"/></svg></div>
-        <div class="rowtext"><p class="t-title">Tell it your kitchen</p><p class="t-note">How you eat, what you cook on, who you're feeding. Carnivore, vegan, whatever's real for you — any regimen, any appliance.</p></div>
+        <p class="t-title">Tell it your kitchen</p>
       </li>
       <li>
         <div class="chip" data-family="sprout"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-rotation"/></svg></div>
-        <div class="rowtext"><p class="t-title">Builds a rotation</p><p class="t-note">Real dinners you'd actually cook, sized to your goal.</p></div>
+        <p class="t-title">Builds a rotation</p>
       </li>
       <li>
         <div class="chip" data-family="clay"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-stock"/></svg></div>
-        <div class="rowtext"><p class="t-title">Tracks your stock</p><p class="t-note">As you log meals, and tells you what to buy, at which store, and when.</p></div>
+        <p class="t-title">Tracks your stock</p>
       </li>
       <li>
         <div class="chip" data-family="plum"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-report"/></svg></div>
-        <div class="rowtext"><p class="t-title">Add a lab report, if you have one</p><p class="t-note">Skip it and nothing breaks — the rotation already works from your kitchen and your goal. Add a report and food targets sharpen: researched guideline targets, not a guess, each one with a source.</p></div>
+        <p class="t-title">Add a lab report, if you have one</p>
       </li>
       <li>
         <div class="chip" data-family="sprout"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-retest"/></svg></div>
-        <div class="rowtext"><p class="t-title">Test again</p><p class="t-note">Dinner re-shapes itself, and a change waits for the food you already bought to run out first, so nothing is stranded.</p></div>
+        <p class="t-title">Test again</p>
       </li>
     </ol>
   </section>
@@ -730,7 +713,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '30';
+  var BUILD = '31';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
