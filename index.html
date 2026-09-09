@@ -451,6 +451,16 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <circle cx="51" cy="51" r="27" style="fill:var(--enamel)" opacity=".92"/>
       <path d="M38 52 47 61 66 40" style="stroke:var(--ink)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
     </symbol>
+    <symbol id="kw-spark" viewBox="0 0 100 100">
+      <ellipse cx="52" cy="68" rx="18" ry="5" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
+      <path d="M50 20c3 14 8 19 22 22-14 3-19 8-22 22-3-14-8-19-22-22 14-3 19-8 22-22Z" style="fill:var(--core)"/>
+      <path d="M50 30c1.5 7 4 9.5 11 11-7 1.5-9.5 4-11 11-1.5-7-4-9.5-11-11 7-1.5 9.5-4 11-11Z" style="fill:#fff" opacity=".35"/>
+    </symbol>
+    <symbol id="kw-confirm" viewBox="0 0 100 100">
+      <ellipse cx="51" cy="68" rx="20" ry="6" style="fill:var(--shade)" opacity=".14" filter="url(#fx-soft)"/>
+      <circle cx="50" cy="50" r="26" style="fill:var(--core)"/>
+      <path d="M37 51 46 60 65 39" style="stroke:#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -604,7 +614,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     <div class="demo-answers">
     <div class="card card--tint" data-family="frost" id="gatecard" hidden>
       <div class="row" style="padding:0; border:0">
-        <div class="chip" data-family="frost"><svg viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></svg></div>
+        <div class="chip" data-family="frost"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-spark"/></svg></div>
         <div class="rowtext"><p class="t-label">The rule that makes it work</p><p class="t-body" id="gateline" style="margin-top:4px"></p></div>
       </div>
     </div>
@@ -692,7 +702,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     </div>
     <div id="saved" hidden>
       <div class="row">
-        <div class="chip" data-family="sprout"><svg viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7"/></svg></div>
+        <div class="chip" data-family="sprout"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-confirm"/></svg></div>
         <div class="rowtext"><p class="t-label">You're on the list</p><h2 class="t-display" style="margin-top:6px">We'll be in touch</h2></div>
       </div>
       <p class="t-body" id="savedRecap" style="margin-top:var(--s2); color:var(--ink-2)"></p>
@@ -713,7 +723,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '31';
+  var BUILD = '32';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
