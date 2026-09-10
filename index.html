@@ -781,7 +781,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '39';
+  var BUILD = '40';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // Where a visitor came from, if the link said so (?src=reddit, ?utm_source=meta): one word,
@@ -1202,12 +1202,33 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   }
 
   // Email first; the price question after, as directional interest, never a gate on the signup.
-  var signedEmail = '';
+  // One request per signer: the row is held until the price step ends (a chip, or Skip) and
+  // sent once with the answer in it, so the script sends one reply email and writes one row.
+  // If the person leaves the page first, the held row goes out as a beacon on the way out,
+  // without the price. (Build 37-39 sent a second request for the price; the script answered
+  // it with a second copy of the reply email.)
+  var held = null, heldEmail = '';
+  function deliver(payload, note){
+    fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify(payload)})
+      .then(function(){ if (note) note.textContent = 'We will write to ' + payload.email + ' once, when a testing spot opens.'; })
+      .catch(function(){ if (note) note.innerHTML = 'Something did not go through. <a href="mailto:hello@plateside.app">Contact us</a> and we will add you by hand.'; });
+  }
+  function flushHeld(){
+    if (!held) return;
+    var payload = held; held = null;
+    try {
+      if (navigator.sendBeacon){ navigator.sendBeacon(SHEET_URL, new Blob([JSON.stringify(payload)], {type:'text/plain'})); return; }
+    } catch (e) {}
+    deliver(payload, null);
+  }
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') flushHeld(); });
+  window.addEventListener('pagehide', flushHeld);
+
   document.getElementById('accessForm').addEventListener('submit', function(e){
     e.preventDefault();
     var r = compute();
     var email = document.getElementById('email').value.trim();
-    signedEmail = email;
+    heldEmail = email;
     var summary = summaryText(r);
 
     var recap = recapText(r);
@@ -1216,16 +1237,9 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     recapEl.hidden = !recap;
 
     var note = document.getElementById('savedNote');
-    // mode:'no-cors' -- the script answers a POST with a redirect to another Google host whose
-    // reply carries no CORS headers, so a plain fetch rejects AFTER the row is written and the
-    // email sent (his test: "Something did not go through", then the email arrived). An opaque
-    // response resolves the moment the request is delivered and still rejects on a real network
-    // failure, which is the only failure this page can honestly report.
     if (SHEET_URL){
-      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:email, price:'', src:SRC, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
-        .then(function(){ note.textContent = 'We will write to ' + email + ' once, when a testing spot opens.'; })
-        .catch(function(){ note.innerHTML = 'Something did not go through. <a href="mailto:hello@plateside.app">Contact us</a> and we will add you by hand.'; });
-      note.textContent = 'Adding ' + email + '…';
+      held = {email:email, price:'', src:SRC, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap};
+      note.textContent = 'We will write to ' + email + ' once, when a testing spot opens.';
     } else {
       var subject = encodeURIComponent('Plateside: notify me');
       var body = encodeURIComponent('Email: ' + email + '\n' + summary + '\n\n(sent from the Plateside page)');
@@ -1244,10 +1258,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     var chips = document.getElementById('priceChips'), pn = document.getElementById('priceNote');
     chips.querySelectorAll('.pricechip').forEach(function(c){ c.disabled = true; });
     b.classList.add('on');
-    if (price && SHEET_URL){
-      // A second row for the same email, marked as the follow-up it is.
-      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:signedEmail, price:price, src:SRC, followup:'price', flags:'', summary:(SRC ? 'Source: ' + SRC : ''), recap:''})}).catch(function(){});
-    }
+    if (held){ held.price = price; var payload = held; held = null; deliver(payload, document.getElementById('savedNote')); }
     pn.textContent = price ? 'Noted, thank you. That reads as a gut feel, which is all we asked for.' : 'No problem.';
     pn.hidden = false;
     if (!reduced) chips.animate([{opacity:1}, {opacity:.55}], {duration:220, fill:'forwards'});
