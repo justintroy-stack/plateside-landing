@@ -1,7 +1,7 @@
 <title>Plateside Early Access</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Plateside takes the guesswork out of eating. What to cook, what to buy, and when, sized to your goal and shaped by your blood work. Nothing you type ever leaves your phone.">
+<meta name="description" content="Plateside takes the guesswork out of eating. What to cook, what to buy, and when, sized to your goal and shaped by your blood work. In the app, nothing you type or upload ever leaves your phone.">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/dm-mono-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/dm-mono-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -78,6 +78,8 @@
 [data-family="plum"]  {--wash:var(--plum-wash);  --lit:var(--plum-lit);  --core:var(--plum);  --deep:var(--plum-deep); --fam-ink:var(--plum-ink)}
 
 *,*::before,*::after{box-sizing:border-box}
+/* The hidden attribute wins over a component's own display, so a card can be hidden by state. */
+[hidden]{display:none!important}
 html{background:var(--enamel)}
 body{margin:0;background:var(--enamel);color:var(--ink);font-family:var(--sans);
   font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-wrap:pretty}
@@ -127,8 +129,11 @@ main > .band + .wrap{padding-top:0}
 .hero-in{max-width:640px; margin:0 auto; padding:0 var(--pad); position:relative}
 /* Sized so the headline's first line sits well above the fold on a phone: the plate is the
    opener, not the whole screen. The copy overlaps the plate's shadow tail for depth. */
-.hero-art{position:relative; width:min(86vw,400px); margin:-8px -12vw 0 auto; z-index:1;
-  filter:drop-shadow(0 24px 34px rgba(18,21,14,.12))}
+/* On a phone the plate is an opener, not the first screen: sized so the headline's first line
+   lands inside the top third of an 812px viewport, and pulled right so the copy overlaps its
+   shadow tail. (The review at 390px: the plate took the first third before a word appeared.) */
+.hero-art{position:relative; width:min(58vw,250px); margin:-4px -6vw 0 auto; z-index:1;
+  filter:drop-shadow(0 18px 28px rgba(18,21,14,.12))}
 .hero-art svg{display:block; width:100%; height:auto}
 /* Overlaps the plate's own shadow tail for depth -- the headline is now the first thing in
    .hero-copy, no eyebrow above it and no transit pills below: Duncan Rogoff (Claude Code Club)
@@ -138,7 +143,7 @@ main > .band + .wrap{padding-top:0}
    time. The state-change idea the pills carried ("running low" -> "list ready") isn't lost: the
    lede still names it in words, and the actual demo below delivers it for real, once, when
    someone taps Log it -- better than a static preview of the same moment at the top of the page. */
-.hero-copy{position:relative; z-index:2; margin-top:-44px}
+.hero-copy{position:relative; z-index:2; margin-top:-26px}
 /* Ink is light in dark mode, so a checked flag chip inverts: lime background, dark text. */
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E} }
 :root[data-theme="dark"] .flagchip input:checked + span{background:var(--sprout-lit); color:#12150E}
@@ -172,17 +177,12 @@ main > .band + .wrap{padding-top:0}
 .btn-signature:active{box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.22), 0 1px 2px rgba(18,21,14,.22),
     0 4px 12px color-mix(in srgb, var(--ember-deep) 34%, transparent)}
 .btn-ghost{background:none; color:var(--ink); opacity:.8; text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px; height:auto; padding:0; box-shadow:none}
-/* Try it first: one visual node (the stock icon), not two -- "the list fills in" exists only as
-   words, never mirrored by a second colored shape. --core defaults to ink-3 so the icon can't
-   outcompete the signature button, the page's one deliberate saturated moment. */
-.try-link{align-items:flex-start; --core:var(--ink-3)}
-.try-link-copy{display:flex; flex-direction:column; gap:2px}
-.try-link .link-text{text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px}
-.try-link .link-caption{font-size:12.5px; color:var(--ink-3); font-weight:500; text-decoration:none}
-.btn-ghost.try-link{text-decoration:none}
+/* The demo is the invitation: trying the kitchen is the signature action in the hero, and the
+   email ask is the quiet one until the demo has shown something (the CTA card under the cycle,
+   and the form, carry the signature button then). */
+a.btn{text-decoration:none}
 .cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
-/* Says plainly what "early access" is (an email, once) rather than leaving the phrase to imply
-   something bigger -- Terry Lee's ask, unaddressed until now. flex-basis:100% drops it onto its
+/* Says plainly what the email is for and where the app stands. flex-basis:100% drops it onto its
    own line under both CTAs without adding a fourth stop to .hero-copy itself. */
 .cta-note{flex-basis:100%; margin:0; font-size:12.5px; color:var(--ink-3)}
 
@@ -262,12 +262,33 @@ main > .band + .wrap{padding-top:0}
 .tonight-uses{margin-top:4px}
 .demo-inputs, .demo-answers{display:flex; flex-direction:column; gap:var(--gap)}
 .tonight .btn{grid-column:1 / -1; justify-self:end; height:44px; padding:0 22px; font-size:14px}
+/* The receipt: what the tap just did, in the tap's own numbers, right under the control that
+   did it. One line, mono figures, replaced on every log. */
+.receipt{grid-column:1 / -1; margin:0; padding:10px 12px; border-radius:var(--r-sm);
+  background:color-mix(in srgb, var(--surface) 72%, transparent); font-size:13.5px; line-height:1.45; color:var(--ink-2)}
+.receipt b{color:var(--ink); font-weight:700}
+.receipt .fig{font-family:var(--mono); font-size:12.5px; color:var(--ink); white-space:nowrap}
+.receipt .land{display:block; margin-top:4px; color:var(--ember-ink); font-weight:600}
+.lowempty{margin-top:10px; color:var(--ink-3)}
+/* Lab flags, one level down: one worked example up front, the full picker behind "All six". */
+.flagrow{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s3) var(--s4)}
+.flagrow .btn-ink{height:44px; padding:0 20px; font-size:14px}
+.flagline{margin:10px 0 0; padding:10px 12px; border-radius:var(--r-sm); background:var(--surface); box-shadow:var(--lift-1);
+  font-size:13.5px; line-height:1.45; color:var(--ink-2)}
+.flagline b{color:var(--ink)}
 #cyclecard{padding:var(--s6)}
 .counts{font-size:12px; color:var(--ink-3); text-align:right}
 .strip{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:var(--s3)}
 .plate{position:relative; border-radius:var(--r-sm); padding:3px; transition:box-shadow var(--d-state) var(--ez)}
 .plate.tonight{box-shadow:inset 0 0 0 2px var(--ink)}
 .plate.swapped::after{content:""; position:absolute; right:2px; top:2px; width:8px; height:8px; border-radius:50%; background:var(--ember-deep); box-shadow:0 0 0 2px var(--surface)}
+/* A planned swap is a hollow ring; the swap that has landed is the filled dot. Two states,
+   drawn differently, so the strip never claims a plate has changed while its stock is still
+   in the freezer. */
+.plate.pending::after{content:""; position:absolute; right:2px; top:2px; width:8px; height:8px; border-radius:50%; background:var(--surface);
+  box-shadow:inset 0 0 0 2px var(--ember-deep), 0 0 0 2px var(--surface)}
+.legend .legend-mark--pending i{background:var(--surface); box-shadow:inset 0 0 0 2px var(--ember-deep)}
+.legend .legend-mark--swapped i{background:var(--ember-deep)}
 .legend{display:flex; flex-wrap:wrap; gap:10px 14px; margin-top:var(--s3)}
 .legend span{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-3)}
 .legend i{width:8px; height:8px; border-radius:50%; background:var(--core)}
@@ -283,6 +304,12 @@ main > .band + .wrap{padding-top:0}
 .swap .t-title{font-size:16px}
 .swap .t-note{margin-top:3px; color:var(--ink-2)}
 .swap s{color:var(--ink-3); font-weight:500; text-decoration-color:var(--ink-3)}
+.swap .waiting{color:var(--ink-3); font-weight:500}
+/* The marker and the rule sit one tap behind the dinner line. */
+.swap details{margin-top:4px}
+.swap summary{list-style:none; cursor:pointer; display:inline-block; font-size:13px; font-weight:700; color:var(--ink-3); text-decoration:underline; text-underline-offset:3px}
+.swap summary::-webkit-details-marker{display:none}
+.swap details p{margin-top:4px}
 .empty{padding:var(--s4) 0 0; color:var(--ink-3)}
 .delta{display:flex; flex-direction:column; gap:10px; margin-top:var(--s3)}
 .deltarow{display:flex; gap:10px; align-items:flex-start}
@@ -304,6 +331,15 @@ input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outl
 #saved{margin-top:var(--s4)}
 #saved .row:first-child{padding-top:0; border:0}
 #saved .note{margin-top:var(--s3); padding:12px 14px; border-radius:var(--r-md); background:var(--sunk); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
+.form-note{margin:0}
+/* The price question, after the email: directional interest, asked as chips, skippable. */
+.pricechips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.pricechip{height:40px; padding:0 16px; border-radius:var(--r-pill); border:0; background:var(--surface); box-shadow:var(--lift-1);
+  font-family:var(--sans); font-weight:600; font-size:14px; color:var(--ink-2); cursor:pointer;
+  transition:transform var(--d-press) var(--ez), background-color var(--d-state) var(--ez), color var(--d-state) var(--ez)}
+.pricechip:active{transform:scale(.96)}
+.pricechip--skip{background:none; box-shadow:none; text-decoration:underline; text-underline-offset:3px}
+.pricechip.on{background:var(--ink); color:var(--sprout-lit)}
 
 footer{padding:var(--s7) 0 var(--s9)}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
@@ -480,7 +516,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
 
 <header><div class="wrap">
   <span class="brand">PLATESIDE</span>
-  <span class="status-pip">Not live yet</span>
+  <span class="status-pip">In private testing</span>
 </div></header>
 
 <main>
@@ -542,19 +578,13 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       </div>
       <div class="hero-copy">
         <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
-        <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react. Got a lab panel? Flag what's on it and watch the same list get sharper. No email needed for either part.</p>
+        <p class="lede">A dinner rotation built from your kitchen and how you eat, sized to your goal. Log a plate below and watch the stock and the store list react. Have a lab panel? Flag it and the list sharpens. No email needed.</p>
         <div class="cta-row">
-          <button class="btn btn-signature" id="ctaTop">Get notified
+          <a class="btn btn-signature" id="ctaTry" href="#guide">Try the kitchen
             <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-          </button>
-          <a class="btn btn-ghost try-link" href="#guide">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-stock"/></svg>
-            <span class="try-link-copy">
-              <span class="link-text">Try it first</span>
-              <span class="link-caption">stock runs low &rarr; the list fills in</span>
-            </span>
           </a>
-          <p class="cta-note">One email, the moment it works on your real numbers. No incentive games.</p>
+          <button class="btn btn-ghost" id="ctaTop">Get notified</button>
+          <p class="cta-note">Built, and in private testing on real phones. Leave an email to hear when a spot opens.</p>
         </div>
       </div>
     </div>
@@ -590,7 +620,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
 
   <section class="stack" id="guide">
     <div class="section-head"><p class="t-label">Try it — no email needed</p><h2 class="t-display">Log tonight. Watch the kitchen react.</h2>
-      <p class="t-body" style="margin-top:8px; color:var(--ink-2)">This is the real mechanism, run on an example kitchen. Log a plate and watch the stock count down toward a store run. Then flag what's on a lab panel and watch future nights swap too. Not your plan — nothing here leaves this page.</p>
+      <p class="t-body" style="margin-top:8px; color:var(--ink-2)">The real mechanism, run on an example kitchen. Log a plate: the stock counts down and the store list fills in. Flag a lab result: future nights change, but only once what is already in the freezer is eaten. Not your plan, and nothing here leaves this page.</p>
     </div>
     <div class="demo-inputs">
     <div class="stack" id="logblock">
@@ -605,17 +635,24 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
           <p class="t-note tonight-uses" id="tonightUses"></p>
         </div>
         <button class="btn btn-ink" id="logBtn">Log it</button>
+        <p class="receipt" id="receipt" role="status" aria-live="polite" hidden></p>
       </div>
     </div>
-    <div class="card card--tint" data-family="clay" id="lowcard" hidden>
-      <p class="t-label">Running low, from logging</p>
-      <p class="t-body" style="margin-top:4px">Keep tapping Log it and this fills in — exactly what a real store run needs, no flag required.</p>
-      <div class="pills" id="lowPills" style="margin-top:10px"></div>
+    <div class="card card--tint" data-family="clay" id="lowcard">
+      <p class="t-label">Running low</p>
+      <p class="t-body" style="margin-top:4px">What a real store run needs, filled in by logging. No flag required.</p>
+      <p class="t-note lowempty" id="lowEmpty">Nothing yet. Log a plate and this fills in.</p>
+      <div class="pills" id="lowPills" style="margin-top:10px" hidden></div>
     </div>
     </div>
     <div id="flagblock">
-      <p class="t-label" style="padding:var(--s2) 0 0">Flag what's on your panel</p>
-      <div class="flagpicker" id="flagpicker" style="margin-top:10px"></div>
+      <p class="t-label" style="padding:var(--s2) 0 0">Then flag a lab result, if you have one</p>
+      <div class="flagrow" id="flagrow" style="margin-top:10px">
+        <button class="btn btn-ink" id="flagTry" type="button">Try one: LDL or ApoB high</button>
+        <button class="btn btn-ghost" id="flagMore" type="button">All six</button>
+      </div>
+      <div class="flagpicker" id="flagpicker" style="margin-top:10px" hidden></div>
+      <p class="flagline" id="flagline" role="status" aria-live="polite" hidden></p>
     </div>
     </div>
     <div class="card" id="cyclecard">
@@ -626,6 +663,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <div class="strip" id="strip"></div>
       <div class="legend">
         <span data-family="ember"><i></i>beef</span><span data-family="frost"><i></i>fish</span><span data-family="clay"><i></i>poultry</span><span data-family="plum"><i></i>pork</span><span data-family="sprout"><i></i>beans</span>
+        <span class="legend-mark legend-mark--pending" id="legendPending" hidden><i></i>planned, waiting on stock</span><span class="legend-mark legend-mark--swapped" id="legendSwapped" hidden><i></i>swapped</span>
       </div>
       <div class="caps" id="caps"></div>
       <div id="swaps"></div>
@@ -642,7 +680,10 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <div class="delta" id="delta"></div>
     </div>
     <div class="card card--tint" data-family="sprout" id="listcta" hidden>
-      <p class="t-body">That's the mechanism — cook, log, and the plan reacts, sharper still with a lab flag. Want it running on your real kitchen? <a href="#signup" id="saveListLink" style="color:var(--sprout-ink); font-weight:700; text-decoration:underline">Join early access &rarr;</a></p>
+      <p class="t-title">That's the mechanism.</p>
+      <p class="t-body" style="margin-top:6px">Cook, log, and the plan reacts; sharper still with a lab flag, and never before the freezer is empty. Want it running on your real kitchen? It's built and in private testing now.</p>
+      <div class="cta-row" style="margin-top:var(--s4)"><a class="btn btn-signature" href="#signup" id="saveListLink">Get notified
+        <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></div>
     </div>
     </div>
     <p class="t-note disclaimer">An example kitchen, not a prescription — this one leans toward meat, but the real rotation works from any diet, carnivore to vegan. The lab's own printed range and your own doctor come first, always — this shows what the app does with a flag, never a verdict on you.</p>
@@ -674,19 +715,14 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
         <h2 class="t-display" style="margin-top:6px">Your results stay yours.</h2>
       </div>
     </div>
-    <p class="t-body" style="margin-top:var(--s3); opacity:.86">Nothing you type or upload ever leaves your phone — including a lab report. No account. No server. Whoever builds this can't see your results, because there's no place to see them from.</p>
+    <p class="t-body" style="margin-top:var(--s3); opacity:.86">In the app, nothing you type or upload ever leaves your phone, a lab report included. No account. No server. Whoever builds this can't see your results, because there's no place to see them from.</p>
+    <p class="t-body" style="margin-top:var(--s3); opacity:.7">This page is the one exception, and a small one: if you leave an email below, it keeps the email. Nothing from the example kitchen goes anywhere.</p>
       </div>
       <div class="band-proof">
     <div style="margin-top:var(--s5)">
       <div class="row"><div class="chip chip--onsolid"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-nocloud"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No cloud, no telemetry, no third party</p></div></div>
       <div class="row"><div class="chip chip--onsolid"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-lock"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">No login — your data lives on your device, not ours</p></div></div>
       <div class="row"><div class="chip chip--onsolid"><svg class="mp" viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-check"/></svg></div><div class="rowtext"><p class="t-title" style="font-size:15px">The lab's own printed range is always shown, never hidden behind a "score"</p></div></div>
-    </div>
-    <div class="row" style="align-items:baseline; border-top:1px solid rgba(255,255,255,.12); margin-top:var(--s2)">
-      <div class="rowtext">
-        <p class="num num--lg">289M<span style="font-size:18px; opacity:.6">+</span></p>
-        <p class="t-note" style="margin-top:6px; opacity:.7; max-width:40ch">people affected by US healthcare data breaches in 2024 alone. The only guaranteed way not to be one of them is data that was never collected — HIPAA Journal, 2024 breach report.</p>
-      </div>
     </div>
       </div>
     </div>
@@ -696,27 +732,17 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   <section class="card" id="signup">
     <div id="askblock">
       <div class="signup-copy">
-      <p class="t-label">Join early access</p>
-      <h2 class="t-display" style="margin-top:6px">Get notified, and tell us what this is worth to you</h2>
-      <p class="t-body" style="margin-top:10px; color:var(--ink-2)">Plateside isn't public yet. What you just tried was an example kitchen — leave your email and we'll tell you the moment it can do that with your actual numbers. The price question is optional, and genuinely useful to us.</p>
+      <p class="t-label">Get notified</p>
+      <h2 class="t-display" style="margin-top:6px">Hear when a spot opens</h2>
+      <p class="t-body" style="margin-top:10px; color:var(--ink-2)">Plateside is built and in private testing on real phones, a few people at a time. What you just tried was an example kitchen; the app runs the same mechanism on yours. Leave your email and we'll write once, when it's your turn.</p>
       </div>
       <form id="accessForm">
         <div class="field">
           <label class="t-label" for="email">Email</label>
           <input type="email" id="email" name="email" required placeholder="you@example.com">
         </div>
-        <div class="field">
-          <label class="t-label" for="price">What would you expect to pay for this? (optional)</label>
-          <select id="price" name="price">
-            <option value="">Prefer not to say</option>
-            <option value="free-only">Only if it's free</option>
-            <option value="under-5">Under $5/month</option>
-            <option value="5-10">$5–10/month</option>
-            <option value="10-15">$10–15/month</option>
-            <option value="more">More, if it genuinely worked</option>
-          </select>
-        </div>
         <button type="submit" class="btn btn-signature" style="align-self:flex-start">Get notified</button>
+        <p class="t-note form-note">The one thing this page keeps is this email. Nothing from the example kitchen is sent with it.</p>
       </form>
     </div>
     <div id="saved" hidden>
@@ -726,6 +752,19 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       </div>
       <p class="t-body" id="savedRecap" style="margin-top:var(--s2); color:var(--ink-2)"></p>
       <p class="note" id="savedNote"></p>
+      <div id="priceask" style="margin-top:var(--s5)">
+        <p class="t-label">One optional question</p>
+        <p class="t-body" style="margin-top:6px; color:var(--ink-2)">What would you expect to pay for this? A gut feel, not a commitment. It helps us more than you'd think.</p>
+        <div class="pricechips" id="priceChips">
+          <button type="button" class="pricechip" data-price="Only if it's free">Only if it's free</button>
+          <button type="button" class="pricechip" data-price="Under $5/month">Under $5/month</button>
+          <button type="button" class="pricechip" data-price="$5–10/month">$5–10/month</button>
+          <button type="button" class="pricechip" data-price="$10–15/month">$10–15/month</button>
+          <button type="button" class="pricechip" data-price="More, if it genuinely worked">More, if it genuinely worked</button>
+          <button type="button" class="pricechip pricechip--skip" data-price="">Skip</button>
+        </div>
+        <p class="t-note" id="priceNote" hidden></p>
+      </div>
     </div>
   </section>
 
@@ -742,13 +781,18 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '36';
+  var BUILD = '37';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   document.getElementById('ctaTop').addEventListener('click', function(){
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
     document.getElementById('email').focus({preventScroll:true});
+  });
+  // The demo is the invitation: the signature action in the hero goes to the kitchen.
+  document.getElementById('ctaTry').addEventListener('click', function(e){
+    e.preventDefault();
+    document.getElementById('guide').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
   });
 
 
@@ -807,35 +851,39 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     {name:'Ribeye', cls:'beef', stock:'ribeye'}
   ];
   var SUGAR = 'Added sugar is the lever, and it lives beside dinner, not in it: the granola bar leaves the snack pool, and nuts and an apple take the slot.';
+  // The six things the app's own food rules read, and nothing it cannot do: the same markers its
+  // empty Markers screen lists, plus one condition (noted under You, not a lab number).
   var FLAGS = [
-    {id:'trig', label:'Triglycerides high', swaps:[], caps:['Added sugar ↓'], beside:SUGAR,
-      minus:['granola bars'], plus:['mixed nuts','apples']},
     {id:'ldl', label:'LDL or ApoB high', why:'fewer red-meat nights this cycle, more fish',
       swaps:[{slot:5, to:{name:'Salmon, dill', cls:'fish', stock:'salmon'}}, {slot:11, to:{name:'Cod, tomatoes', cls:'fish', stock:'cod'}}],
-      caps:['Saturated fat ↓'], minus:['ground beef'], plus:['salmon','cod']},
+      caps:['Saturated fat ↓'], minus:['ground beef, a smaller pack'], plus:['salmon','cod']},
+    {id:'trig', label:'Triglycerides high', swaps:[], caps:['Added sugar ↓'], beside:SUGAR,
+      minus:['granola bars'], plus:['mixed nuts','apples']},
     {id:'hdl', label:'HDL low', swaps:[], caps:['Added sugar ↓'], beside:SUGAR,
       minus:['granola bars'], plus:['mixed nuts','apples']},
     {id:'a1c', label:'A1c or glucose creeping up', swaps:[], caps:['Added sugar ↓'], beside:SUGAR,
       minus:['granola bars'], plus:['mixed nuts','apples']},
-    {id:'ferritin', label:'Ferritin flagged', swaps:[], caps:[],
-      note:'Charted, and moves nothing at dinner. It runs two ways — too low and too high both read "flagged" — and that is a conversation with your doctor first.'},
-    {id:'vitd', label:'Vitamin D low', swaps:[], caps:[],
-      note:'Charted, and moves nothing at dinner. Few foods carry much of it; this is a supplement question, not a swap.'},
-    {id:'bun', label:'BUN flagged', swaps:[], caps:[],
-      note:'Charted, and moves nothing at dinner on its own. Protein already runs high by design, and that alone can raise BUN with nothing wrong — creatinine and eGFR are the real kidney numbers, not this one.'},
-    {id:'urate', label:'Uric acid / gout', why:'purine-rich food leaves the cycle and beef nights cap at two',
+    {id:'ferritin', label:'Ferritin high', why:'one red-meat night fewer this cycle, while it sits above its target',
+      swaps:[{slot:13, to:{name:'Cod, lemon', cls:'fish', stock:'cod'}}],
+      caps:['Red-meat nights ≤ 4'], minus:['ribeye'], plus:['cod']},
+    {id:'gout', label:'Gout on file', why:'a condition noted under You, not a lab number: purine-rich food leaves the cycle and beef nights cap at two',
       swaps:[{slot:6, to:{name:'Chicken and rice', cls:'poultry', stock:'chicken thighs'}}, {slot:8, to:{name:'Cod, lemon', cls:'fish', stock:'cod'}},
              {slot:11, to:{name:'Turkey chili', cls:'poultry', stock:'ground turkey'}}, {slot:13, to:{name:'Chicken thighs, lemon', cls:'poultry', stock:'chicken thighs'}}],
       caps:['Beef nights ≤ 2'], minus:['shrimp','chuck roast','ground beef','ribeye'], plus:['chicken thighs','cod','ground turkey']}
   ];
-  var STOCK = {'ground beef':3, 'salmon':1, 'chicken thighs':1, 'pork chops':1, 'lentils':1, 'shrimp':1,
+  // Two portions of ground beef, three beef-with-ground-beef nights a cycle: the freezer runs out
+  // at the sixth plate, in plain sight, which is when a planned swap is allowed to land.
+  var STOCK = {'ground beef':2, 'salmon':1, 'chicken thighs':1, 'pork chops':1, 'lentils':1, 'shrimp':1,
     'chicken sausage':1, 'chuck roast':1, 'cod':1, 'black beans':1, 'ground turkey':1, 'ribeye':1,
     'white fish':1, 'chickpeas':1};
   var LOW = [];
-  var cursor = 0, cycleNum = 1;
+  var RANOUT = {};                 // item -> the meal number whose log used the last of it
+  var cursor = 0, cycleNum = 1, logged = 0;
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function list(a){ return a.length < 2 ? a.join('') : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; }
+  function uniq(a){ return a.filter(function(x, i){ return a.indexOf(x) === i; }); }
+  function portions(n){ return n + (n === 1 ? ' portion' : ' portions'); }
   function plateSvg(cls, extraClass){
     return '<svg class="mp ' + (extraClass||'') + '" data-family="' + FAM[cls] + '" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/><use href="#mark-' + cls + '"/></svg>';
   }
@@ -860,22 +908,32 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     picker.appendChild(lab);
   });
 
+  // The rule the whole page rests on, run for real: a flag PLANS a swap; the swap LANDS only once
+  // the stock the old plate was eating is gone. Until then the strip shows the old plate with a
+  // ring, the gate card counts the portions left, and nothing in the freezer is wasted.
   function compute(){
     var sel = FLAGS.filter(function(f){ return document.getElementById('f-' + f.id).checked; });
-    var rot = CYCLE.map(function(p){ return {name:p.name, cls:p.cls, stock:p.stock, from:null, fromCls:null}; });
-    var r = {sel:sel, rot:rot, swaps:[], caps:[], besides:[], notes:[], minus:[], plus:[], gates:[], counts:{}};
+    var rot = CYCLE.map(function(p){ return {name:p.name, cls:p.cls, stock:p.stock, from:null, fromCls:null, pending:null}; });
+    var r = {sel:sel, rot:rot, swaps:[], planned:[], caps:[], besides:[], minus:[], plus:[], gates:[], counts:{}};
     sel.forEach(function(f){
       f.swaps.forEach(function(s){
         var p = rot[s.slot];
-        if (p.from) return;
-        var fromStock = p.stock;
-        r.swaps.push({from:p.name, fromCls:p.cls, to:s.to.name, cls:s.to.cls, why:f.label + ': ' + f.why + '.'});
-        if (r.gates.indexOf(fromStock) < 0) r.gates.push(fromStock);
-        p.from = p.name; p.fromCls = p.cls; p.name = s.to.name; p.cls = s.to.cls; p.stock = s.to.stock || fromStock;
+        if (p.from || p.pending) return;           // the first flag to claim a night keeps it
+        var gate = p.stock;
+        var e = {slot:s.slot, from:p.name, fromCls:p.cls, to:s.to.name, cls:s.to.cls, gate:gate, flag:f.label, why:f.label + ': ' + f.why + '.'};
+        if ((STOCK[gate] || 0) === 0){
+          e.landed = RANOUT[gate] || 0;
+          r.swaps.push(e);
+          p.from = p.name; p.fromCls = p.cls; p.name = s.to.name; p.cls = s.to.cls; p.stock = s.to.stock || gate;
+        } else {
+          e.left = STOCK[gate];
+          r.planned.push(e);
+          p.pending = e;
+          if (r.gates.indexOf(gate) < 0) r.gates.push(gate);
+        }
       });
       f.caps.forEach(function(c){ if (r.caps.indexOf(c) < 0) r.caps.push(c); });
       if (f.beside && r.besides.indexOf(f.beside) < 0) r.besides.push(f.beside);
-      if (f.note) r.notes.push({label:f.label, note:f.note});
       (f.minus || []).forEach(function(m){ if (r.minus.indexOf(m) < 0) r.minus.push(m); });
       (f.plus || []).forEach(function(m){ if (r.plus.indexOf(m) < 0) r.plus.push(m); });
     });
@@ -891,19 +949,42 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       tonightName = document.getElementById('tonightName'), tonightUses = document.getElementById('tonightUses'),
       tonightPlate = document.getElementById('tonightPlate'), tonightMark = document.getElementById('tonightMark'),
       tonightArt = document.getElementById('tonightArt'), tonightCopy = document.getElementById('tonightCopy'),
-      lowcard = document.getElementById('lowcard'), lowPills = document.getElementById('lowPills');
-  var lastR = null, prevNames = null;
+      lowcard = document.getElementById('lowcard'), lowPills = document.getElementById('lowPills'), lowEmpty = document.getElementById('lowEmpty'),
+      receipt = document.getElementById('receipt'), flagline = document.getElementById('flagline'),
+      legendPending = document.getElementById('legendPending'), legendSwapped = document.getElementById('legendSwapped');
+  var lastR = null, prevNames = null, prevPending = null;
+
+  function whyBlock(e){
+    return '<details><summary>Why?</summary><p class="t-note">' + esc(e.why) + '</p></details>';
+  }
+  function gateText(r){
+    var parts = [];
+    if (r.swaps.length){
+      var landed = uniq(r.swaps.map(function(e){ return e.gate; }));
+      parts.push('The ' + list(landed) + ' ran out' + (r.swaps[0].landed ? ' at meal ' + r.swaps[0].landed : '') + ', so ' + (r.swaps.length === 1 ? 'the swap landed there' : 'the swaps landed there') + ' and not a night before. Nothing thrown out.');
+    }
+    if (r.planned.length){
+      var waits = r.gates.map(function(g){ return 'the ' + g + ' (' + portions(STOCK[g]) + ' left)'; });
+      parts.push('Nothing else changes until what is already in the freezer is eaten: ' + list(waits) + '. The list stops buying it; the plate swaps the night it runs out. Nothing wasted.');
+      if (!r.swaps.length) parts[0] = parts[0].replace('Nothing else changes', 'Nothing changes');
+    }
+    return parts.join(' ');
+  }
 
   function render(){
     var r = compute();
     lastR = r;
 
-    // The strip: which plates actually changed since the last render, so only those move.
-    var changed = [];
+    // The strip: which plates actually changed since the last render, so only those move; a
+    // newly planned one gets a smaller nod, since nothing on it has changed yet.
+    var changed = [], newlyPlanned = [];
     if (prevNames){ r.rot.forEach(function(p, i){ if (prevNames[i] !== p.name) changed.push(i); }); }
+    if (prevPending){ r.rot.forEach(function(p, i){ if (p.pending && !prevPending[i]) newlyPlanned.push(i); }); }
     prevNames = r.rot.map(function(p){ return p.name; });
+    prevPending = r.rot.map(function(p){ return !!p.pending; });
     strip.innerHTML = r.rot.map(function(p, idx){
-      return '<div class="plate' + (p.from ? ' swapped' : '') + (idx === cursor ? ' tonight' : '') + '" data-slot="' + idx + '" title="' + esc(p.name) + '">' + plateSvg(p.cls) + '</div>';
+      var title = p.pending ? p.name + ' → ' + p.pending.to + ' once the ' + p.pending.gate + ' runs out' : (p.from ? p.from + ' → ' + p.name : p.name);
+      return '<div class="plate' + (p.from ? ' swapped' : '') + (p.pending ? ' pending' : '') + (idx === cursor ? ' tonight' : '') + '" data-slot="' + idx + '" title="' + esc(title) + '">' + plateSvg(p.cls) + '</div>';
     }).join('');
     if (!reduced && changed.length){
       changed.forEach(function(i, n){
@@ -917,7 +998,16 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
         ], {duration:560, delay:n*60, easing:'cubic-bezier(.22,.72,.24,1)'});
       });
     }
+    if (!reduced && newlyPlanned.length){
+      newlyPlanned.forEach(function(i, n){
+        var el = strip.querySelector('[data-slot="' + i + '"]');
+        if (!el) return;
+        el.animate([{transform:'scale(1)'}, {transform:'scale(1.1)', offset:.5}, {transform:'scale(1)'}], {duration:420, delay:n*60, easing:'cubic-bezier(.22,.72,.24,1)'});
+      });
+    }
     counts.textContent = ORDER.filter(function(k){ return r.counts[k]; }).map(function(k){ return r.counts[k] + ' ' + k; }).join(' · ');
+    legendPending.hidden = !r.planned.length;
+    legendSwapped.hidden = !r.swaps.length;
 
     var tp = r.rot[cursor];
     tonightcard.setAttribute('data-family', FAM[tp.cls]);
@@ -925,34 +1015,41 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     tonightMark.setAttribute('href', '#mark-' + tp.cls);
     tonightMeta.textContent = 'Meal ' + (cursor + 1) + ' of 14 · cycle ' + cycleNum;
     tonightName.textContent = tp.name;
-    tonightUses.textContent = 'Uses ' + tp.stock + ' — ' + (STOCK[tp.stock] || 0) + ' on hand';
+    var on = STOCK[tp.stock] || 0;
+    tonightUses.textContent = 'Uses ' + tp.stock + ' — ' + (on ? on + ' on hand' + (on === 1 ? ', the last of it' : '') : 'none on hand, on the list');
 
     lowPills.innerHTML = LOW.map(function(item){ return '<span class="pill less">' + esc(item) + '</span>'; }).join('');
-    revealCard(lowcard, !!LOW.length);
+    lowPills.hidden = !LOW.length;
+    lowEmpty.hidden = !!LOW.length;
     caps.innerHTML = r.caps.map(function(c){ return '<span>' + esc(c) + '</span>'; }).join('');
     caps.hidden = !r.caps.length;
 
+    // Dinner first, in dinner words; the marker and the rule sit behind Why?.
     var html = '';
     if (!r.sel.length){
-      html = '<p class="t-note empty">Pick a flag above and the cycle answers.</p>';
+      html = '<p class="t-note empty">Flag a lab result above and the cycle answers.</p>';
     } else {
       var swapDelay = reduced ? '' : ' style="animation-delay:';
-      html += r.swaps.map(function(s, i){
+      html += r.planned.map(function(e, i){
         return '<div class="swap settle-in--spring"' + (swapDelay ? swapDelay + (i*70) + 'ms"' : '') + '>' +
-          '<span class="mp-pair">' + plateSvg(s.fromCls, 'mp--sm') + '<svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>' + plateSvg(s.cls, 'mp--sm') + '</span>' +
-          '<div class="rowtext"><p class="t-title"><s>' + esc(s.from) + '</s> becomes ' + esc(s.to) + '</p><p class="t-note">' + esc(s.why) + '</p></div></div>';
+          '<span class="mp-pair">' + plateSvg(e.fromCls, 'mp--sm') + '<svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>' + plateSvg(e.cls, 'mp--sm') + '</span>' +
+          '<div class="rowtext"><p class="t-title">' + esc(e.from) + ' <span class="waiting">becomes</span> ' + esc(e.to) + '</p>' +
+          '<p class="t-note">Planned. Waits for the ' + esc(e.gate) + ' already on hand, ' + portions(e.left) + '; lands the night it runs out.</p>' + whyBlock(e) + '</div></div>';
+      }).join('');
+      html += r.swaps.map(function(e, i){
+        return '<div class="swap settle-in--spring"' + (swapDelay ? swapDelay + ((r.planned.length + i)*70) + 'ms"' : '') + '>' +
+          '<span class="mp-pair">' + plateSvg(e.fromCls, 'mp--sm') + '<svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>' + plateSvg(e.cls, 'mp--sm') + '</span>' +
+          '<div class="rowtext"><p class="t-title"><s>' + esc(e.from) + '</s> is now ' + esc(e.to) + '</p>' +
+          '<p class="t-note">Landed' + (e.landed ? ' at meal ' + e.landed : '') + ', when the ' + esc(e.gate) + ' ran out.</p>' + whyBlock(e) + '</div></div>';
       }).join('');
       html += r.besides.map(function(b){
-        return '<div class="swap settle-in"><span class="mp-pair">' + plateSvg('beans', 'mp--sm') + '</span><div class="rowtext"><p class="t-title">Beside dinner</p><p class="t-note">' + esc(b) + '</p></div></div>';
-      }).join('');
-      html += r.notes.map(function(n){
-        return '<div class="swap settle-in"><span class="mp-pair"><svg class="mp mp--sm" data-family="plum" viewBox="0 0 100 100" aria-hidden="true"><use href="#mp-base"/></svg></span><div class="rowtext"><p class="t-title">' + esc(n.label) + '</p><p class="t-note">' + esc(n.note) + '</p></div></div>';
+        return '<div class="swap settle-in"><span class="mp-pair">' + plateSvg('beans', 'mp--sm') + '</span><div class="rowtext"><p class="t-title">Dinner stays. Beside it, one thing moves.</p><p class="t-note">' + esc(b) + '</p></div></div>';
       }).join('');
     }
     swapsEl.innerHTML = html;
 
-    if (r.gates.length){
-      gateline.textContent = 'Nothing changes until what is already in the freezer — the ' + list(r.gates) + ' — is eaten. The list stops buying it; the plate swaps the night it runs out. Nothing wasted.';
+    if (r.planned.length || r.swaps.length){
+      gateline.textContent = gateText(r);
       revealCard(gatecard, true, true);
     } else { gatecard.hidden = true; }
 
@@ -963,30 +1060,91 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       revealCard(listcard, true);
     } else { listcard.hidden = true; }
 
-    var loggedAny = (cursor !== 0 || cycleNum > 1);
-    revealCard(listcta, r.sel.length || loggedAny);
+    revealCard(listcta, r.sel.length || logged > 0);
     return r;
   }
 
-  picker.addEventListener('change', render);
+  // The compact summary right under the flags: what each flag does to dinner, in dinner words,
+  // and what it changes at the store. The marker and its rule stay behind Why? on the rows.
+  function flagLine(r){
+    if (!r.sel.length) return '';
+    return r.sel.map(function(f){
+      var mine = r.planned.concat(r.swaps).filter(function(e){ return e.flag === f.label; });
+      var s = '<b>' + esc(f.label) + ':</b> ';
+      if (mine.length){
+        var landed = mine.filter(function(e){ return !e.left; }), waiting = mine.filter(function(e){ return e.left; });
+        var bits = [];
+        if (landed.length) bits.push(list(landed.map(function(e){ return e.from + ' is now ' + e.to; })) + (landed[0].landed ? ' (landed at meal ' + landed[0].landed + ')' : ''));
+        if (waiting.length){
+          var gates = uniq(waiting.map(function(e){ return 'the ' + e.gate + ' on hand (' + portions(e.left) + ')'; }));
+          bits.push(list(waiting.map(function(e){ return e.from + ' becomes ' + e.to; })) + ', once ' + list(gates) + ' is eaten');
+        }
+        s += bits.join('; ') + '.';
+      } else if (f.beside){
+        s += 'dinner stays; the granola bar leaves the snack pool and nuts and an apple take the slot.';
+      } else {
+        s += 'charted, and dinner stays.';
+      }
+      if ((f.minus || []).length || (f.plus || []).length){
+        s += ' At the store: ' + ((f.minus || []).length ? 'less ' + list(f.minus) : '') + (((f.minus || []).length && (f.plus || []).length) ? '; ' : '') + ((f.plus || []).length ? 'add ' + list(f.plus) : '') + '.';
+      }
+      return s;
+    }).join('<br>');
+  }
+  function syncFlagLine(){
+    var s = flagLine(lastR);
+    flagline.innerHTML = s;
+    flagline.hidden = !s;
+  }
+
+  var flagrow = document.getElementById('flagrow');
+  function showPicker(){ flagrow.hidden = true; revealCard(picker, true); }
+  document.getElementById('flagTry').addEventListener('click', function(){
+    showPicker();
+    var box = document.getElementById('f-ldl');
+    if (!box.checked){ box.checked = true; }
+    render(); syncFlagLine();
+  });
+  document.getElementById('flagMore').addEventListener('click', function(){ showPicker(); });
+  picker.addEventListener('change', function(){ render(); syncFlagLine(); });
   render();
 
   // Log it: tonight's plate and its words leave to the left as one element and the next night
   // arrives from the right -- one continuous move, not two states swapping. The stock and the
-  // cursor advance in between, while nothing is on screen.
+  // cursor advance in between, while nothing is on screen, and the receipt under the button says
+  // what the tap did in the tap's own numbers.
   var logging = false;
+  function writeReceipt(p, before, after, landed){
+    var fig = before > 0 ? p.stock + ' ' + before + ' → ' + after : p.stock + ': none on hand';
+    var h = '<b>' + esc(p.name) + '</b> logged · <span class="fig">' + esc(fig) + '</span>';
+    if (before > 0 && after === 0) h += ' · on the list now';
+    if (before === 0) h += ' · already on the list';
+    if (landed.length){
+      h += '<span class="land">The ' + esc(p.stock) + ' ran out, so ' + esc(list(landed.map(function(e){ return e.from + ' → ' + e.to; }))) + ' from here on. Nothing thrown out.</span>';
+    }
+    receipt.innerHTML = h;
+    revealCard(receipt, true);
+  }
   document.getElementById('logBtn').addEventListener('click', function(){
     if (logging) return;
     var advance = function(){
       var p = lastR.rot[cursor];
+      var before = STOCK[p.stock] || 0, after = before;
       if (STOCK[p.stock] === undefined) STOCK[p.stock] = 0;
+      logged += 1;
       if (STOCK[p.stock] > 0){
-        STOCK[p.stock] -= 1;
-        if (STOCK[p.stock] === 0 && LOW.indexOf(p.stock) < 0) LOW.push(p.stock);
+        STOCK[p.stock] -= 1; after = STOCK[p.stock];
+        if (STOCK[p.stock] === 0){
+          if (LOW.indexOf(p.stock) < 0) LOW.push(p.stock);
+          RANOUT[p.stock] = logged;
+        }
       }
       cursor += 1;
       if (cursor >= CYCLE.length){ cursor = 0; cycleNum += 1; }
-      render();
+      var r = render();
+      var landed = (before === 1 && after === 0) ? r.swaps.filter(function(e){ return e.gate === p.stock; }) : [];
+      writeReceipt(p, before, after, landed);
+      syncFlagLine();
     };
     if (reduced || !tonightArt.animate){ advance(); return; }
     logging = true;
@@ -1014,30 +1172,31 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
 
   function recapText(r){
     var bits = [];
-    var loggedAny = (cursor !== 0 || cycleNum > 1);
     if (r.sel.length) bits.push(r.sel.length + (r.sel.length === 1 ? ' flag' : ' flags') + ' picked');
-    if (loggedAny) bits.push('meal ' + (cursor + 1) + ' of 14 logged');
+    if (logged) bits.push(logged + (logged === 1 ? ' plate' : ' plates') + ' logged');
     return bits.length ? ('Based on what you tried: ' + bits.join(', ') + '.') : '';
   }
 
   function summaryText(r){
     var lines = [];
-    lines.push('Logged: meal ' + (cursor + 1) + ' of 14, cycle ' + cycleNum);
+    lines.push('Logged: ' + logged + ' plates (at meal ' + (cursor + 1) + ' of 14, cycle ' + cycleNum + ')');
     if (LOW.length) lines.push('Running low from logging: ' + LOW.join(', '));
     lines.push('Flags: ' + (r.sel.length ? r.sel.map(function(f){ return f.label; }).join(', ') : 'none picked'));
-    if (r.swaps.length) lines.push('Dinner: ' + r.swaps.map(function(s){ return s.from + ' -> ' + s.to; }).join('; '));
+    if (r.swaps.length) lines.push('Dinner, landed: ' + r.swaps.map(function(e){ return e.from + ' -> ' + e.to + (e.landed ? ' (meal ' + e.landed + ')' : ''); }).join('; '));
+    if (r.planned.length) lines.push('Dinner, waiting on stock: ' + r.planned.map(function(e){ return e.from + ' -> ' + e.to + ' (' + e.gate + ', ' + e.left + ' left)'; }).join('; '));
     if (r.besides.length) lines.push('Beside dinner: the granola bar leaves the snack pool; nuts and an apple take the slot');
     if (r.caps.length) lines.push('Targets: ' + r.caps.join(', '));
     if (r.minus.length || r.plus.length) lines.push('Next store run - less: ' + (r.minus.join(', ') || 'nothing') + '; add: ' + (r.plus.join(', ') || 'nothing'));
     return lines.join('\n');
   }
 
+  // Email first; the price question after, as directional interest, never a gate on the signup.
+  var signedEmail = '';
   document.getElementById('accessForm').addEventListener('submit', function(e){
     e.preventDefault();
     var r = compute();
     var email = document.getElementById('email').value.trim();
-    var priceSel = document.getElementById('price');
-    var price = priceSel.options[priceSel.selectedIndex].text;
+    signedEmail = email;
     var summary = summaryText(r);
 
     var recap = recapText(r);
@@ -1047,19 +1206,35 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
 
     var note = document.getElementById('savedNote');
     if (SHEET_URL){
-      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:price, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
-        .then(function(){ note.textContent = 'We will reach out at ' + email + ' the moment Plateside can run this on your actual numbers.'; })
+      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:email, price:'', flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
+        .then(function(){ note.textContent = 'We will write to ' + email + ' once, when a testing spot opens.'; })
         .catch(function(){ note.innerHTML = 'Something did not go through. <a href="mailto:hello@plateside.app">Contact us</a> and we will add you by hand.'; });
       note.textContent = 'Adding ' + email + '…';
     } else {
-      var subject = encodeURIComponent('Plateside early access');
-      var body = encodeURIComponent('Email: ' + email + '\nWhat I\'d expect to pay: ' + price + '\n' + summary + '\n\n(sent from the early access page)');
+      var subject = encodeURIComponent('Plateside: notify me');
+      var body = encodeURIComponent('Email: ' + email + '\n' + summary + '\n\n(sent from the Plateside page)');
       window.location.href = 'mailto:hello@plateside.app?subject=' + subject + '&body=' + body;
-      note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will tell you the moment Plateside can run this on your actual numbers. Didn\'t open? <a href="mailto:hello@plateside.app">Contact us</a> directly.';
+      note.innerHTML = 'A message to us just opened — hit send so we have your email, and we will write once, when a testing spot opens. Didn\'t open? <a href="mailto:hello@plateside.app">Contact us</a> directly.';
     }
     document.getElementById('askblock').hidden = true;
     revealCard(document.getElementById('saved'), true, true);
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+  });
+
+  document.getElementById('priceChips').addEventListener('click', function(e){
+    var b = e.target.closest('.pricechip');
+    if (!b) return;
+    var price = b.getAttribute('data-price') || '';
+    var chips = document.getElementById('priceChips'), pn = document.getElementById('priceNote');
+    chips.querySelectorAll('.pricechip').forEach(function(c){ c.disabled = true; });
+    b.classList.add('on');
+    if (price && SHEET_URL){
+      // A second row for the same email, marked as the follow-up it is.
+      fetch(SHEET_URL, {method:'POST', body: JSON.stringify({email:signedEmail, price:price, followup:'price', flags:'', summary:'', recap:''})}).catch(function(){});
+    }
+    pn.textContent = price ? 'Noted, thank you. That reads as a gut feel, which is all we asked for.' : 'No problem.';
+    pn.hidden = false;
+    if (!reduced) chips.animate([{opacity:1}, {opacity:.55}], {duration:220, fill:'forwards'});
   });
 })();
 </script>
