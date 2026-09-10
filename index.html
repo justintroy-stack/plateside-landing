@@ -645,7 +645,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       <p class="t-body">That's the mechanism — cook, log, and the plan reacts, sharper still with a lab flag. Want it running on your real kitchen? <a href="#signup" id="saveListLink" style="color:var(--sprout-ink); font-weight:700; text-decoration:underline">Join early access &rarr;</a></p>
     </div>
     </div>
-    <p class="t-note disclaimer">An example kitchen, not a prescription. The lab's own printed range and your own doctor come first, always — this shows what the app does with a flag, never a verdict on you.</p>
+    <p class="t-note disclaimer">An example kitchen, not a prescription — this one leans toward meat, but the real rotation works from any diet, carnivore to vegan. The lab's own printed range and your own doctor come first, always — this shows what the app does with a flag, never a verdict on you.</p>
   </section>
 
   <section class="stack" id="why">
@@ -742,7 +742,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '35';
+  var BUILD = '36';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -751,17 +751,6 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     document.getElementById('email').focus({preventScroll:true});
   });
 
-  // A restrained magnetic pull on the signature CTA -- desktop, real-hover only, and gated behind
-  // reduced motion like every other JS-computed (not pure-CSS) motion on this page.
-  if (!reduced && window.matchMedia('(hover:hover)').matches){
-    var magnetBtn = document.getElementById('ctaTop');
-    magnetBtn.addEventListener('mousemove', function(e){
-      var r = magnetBtn.getBoundingClientRect();
-      var mx = e.clientX - r.left - r.width / 2, my = e.clientY - r.top - r.height / 2;
-      magnetBtn.style.transform = 'translate(' + (mx * 0.3).toFixed(1) + 'px,' + (my * 0.3).toFixed(1) + 'px)';
-    });
-    magnetBtn.addEventListener('mouseleave', function(){ magnetBtn.style.transform = ''; });
-  }
 
   // Scroll reveal: .reveal is added here, at runtime, never in the markup, so a page without JS is
   // simply visible. Toggled both ways on intersection, 0px margin so it un-reveals right at the
