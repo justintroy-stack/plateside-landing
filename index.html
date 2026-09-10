@@ -172,6 +172,14 @@ main > .band + .wrap{padding-top:0}
 .btn-signature:active{box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.22), 0 1px 2px rgba(18,21,14,.22),
     0 4px 12px color-mix(in srgb, var(--ember-deep) 34%, transparent)}
 .btn-ghost{background:none; color:var(--ink); opacity:.8; text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px; height:auto; padding:0; box-shadow:none}
+/* Try it first: one visual node (the stock icon), not two -- "the list fills in" exists only as
+   words, never mirrored by a second colored shape. --core defaults to ink-3 so the icon can't
+   outcompete the signature button, the page's one deliberate saturated moment. */
+.try-link{align-items:flex-start; --core:var(--ink-3)}
+.try-link-copy{display:flex; flex-direction:column; gap:2px}
+.try-link .link-text{text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:1.5px}
+.try-link .link-caption{font-size:12.5px; color:var(--ink-3); font-weight:500; text-decoration:none}
+.btn-ghost.try-link{text-decoration:none}
 .cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
 
 .card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s6); box-shadow:var(--lift-1);
@@ -293,7 +301,18 @@ input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outl
 #saved .row:first-child{padding-top:0; border:0}
 #saved .note{margin-top:var(--s3); padding:12px 14px; border-radius:var(--r-md); background:var(--sunk); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
 
-footer{padding:var(--s7) 0 var(--s9)}
+footer{padding:var(--s7) 0 var(--s9); position:relative; overflow:hidden}
+footer>*{position:relative; z-index:1}
+/* Footer close: a quiet aurora glow + slow-rising dots in the page's own signature colour,
+   ported from site-kit's vanilla footfx (no GSAP/Lenis involved -- those never loaded). Always
+   in the DOM like the grain overlay; the global reduced-motion rule collapses the animation. */
+.footfx{position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+.footfx .aurora{position:absolute; left:-15%; right:-15%; bottom:-70%; height:230%;
+  background:radial-gradient(46% 64% at 28% 100%, var(--ember-deep), transparent 66%), radial-gradient(40% 56% at 72% 100%, var(--ember), transparent 66%);
+  filter:blur(52px); opacity:.22; animation:auroraDrift 16s ease-in-out infinite}
+@keyframes auroraDrift{0%,100%{transform:translateX(-4%) scaleY(1)} 50%{transform:translateX(4%) scaleY(1.18)}}
+.footfx .dot{position:absolute; bottom:6px; width:4px; height:4px; border-radius:50%; background:var(--ember-deep); opacity:0; box-shadow:0 0 10px var(--ember-deep); animation:dotRise linear infinite}
+@keyframes dotRise{0%{transform:translateY(0) scale(.4); opacity:0} 18%{opacity:.55} 80%{opacity:.3} 100%{transform:translateY(-88px) scale(1); opacity:0}}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:10px}
 /* ---------- desktop (>=900px): the page uses the width ---------------------------------
@@ -530,12 +549,18 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
       </div>
       <div class="hero-copy">
         <h1 class="t-hero">Plateside takes the guesswork out of eating.</h1>
-        <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react, then flag what's on a panel and watch it get sharper too. No email needed for either part.</p>
+        <p class="lede">A rotation built around your kitchen, what you cook on and how you eat — sized to your goal. Log a plate below and watch the stock and the store list react. Got a lab panel? Flag what's on it and watch the same list get sharper. No email needed for either part.</p>
         <div class="cta-row">
           <button class="btn btn-signature" id="ctaTop">Get early access
             <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </button>
-          <a class="btn btn-ghost" href="#guide">Try it first</a>
+          <a class="btn btn-ghost try-link" href="#guide">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#kw-stock"/></svg>
+            <span class="try-link-copy">
+              <span class="link-text">Try it first</span>
+              <span class="link-caption">stock runs low &rarr; the list fills in</span>
+            </span>
+          </a>
         </div>
       </div>
     </div>
@@ -723,14 +748,42 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '32';
+  var BUILD = '33';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Footer close: aurora + a scatter of slowly rising dots, always injected (same discipline as
+  // the grain overlay) -- the global reduced-motion rule collapses the keyframe animations, no
+  // separate JS gate needed. Ported from site-kit's vanilla footfx; no GSAP/Lenis anywhere here.
+  document.querySelectorAll('footer').forEach(function(f){
+    var fx = document.createElement('div'); fx.className = 'footfx';
+    var aurora = document.createElement('div'); aurora.className = 'aurora'; fx.appendChild(aurora);
+    for (var i = 0; i < 20; i++){
+      var dot = document.createElement('div'); dot.className = 'dot';
+      dot.style.left = (4 + Math.random() * 92) + '%';
+      dot.style.animationDuration = (6 + Math.random() * 7).toFixed(1) + 's';
+      dot.style.animationDelay = (-Math.random() * 9).toFixed(1) + 's';
+      fx.appendChild(dot);
+    }
+    f.insertBefore(fx, f.firstChild);
+  });
 
   document.getElementById('ctaTop').addEventListener('click', function(){
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
     document.getElementById('email').focus({preventScroll:true});
   });
+
+  // A restrained magnetic pull on the signature CTA -- desktop, real-hover only, and gated behind
+  // reduced motion like every other JS-computed (not pure-CSS) motion on this page.
+  if (!reduced && window.matchMedia('(hover:hover)').matches){
+    var magnetBtn = document.getElementById('ctaTop');
+    magnetBtn.addEventListener('mousemove', function(e){
+      var r = magnetBtn.getBoundingClientRect();
+      var mx = e.clientX - r.left - r.width / 2, my = e.clientY - r.top - r.height / 2;
+      magnetBtn.style.transform = 'translate(' + (mx * 0.3).toFixed(1) + 'px,' + (my * 0.3).toFixed(1) + 'px)';
+    });
+    magnetBtn.addEventListener('mouseleave', function(){ magnetBtn.style.transform = ''; });
+  }
 
   // Scroll reveal: .reveal is added here, at runtime, never in the markup, so a page without JS is
   // simply visible. Toggled both ways on intersection, 0px margin so it un-reveals right at the
