@@ -781,9 +781,19 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '38';
+  var BUILD = '39';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Where a visitor came from, if the link said so (?src=reddit, ?utm_source=meta): one word,
+  // kept in the address and sent with a signup so each channel can be counted in the sheet
+  // itself. No cookie, no pixel, no third party; nothing is stored on this page.
+  var SRC = (function(){
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var v = q.get('src') || q.get('utm_source') || '';
+      return v.replace(/[^\w.-]/g, '').slice(0, 40);
+    } catch (e) { return ''; }
+  })();
 
   document.getElementById('ctaTop').addEventListener('click', function(){
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
@@ -1179,6 +1189,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
 
   function summaryText(r){
     var lines = [];
+    if (SRC) lines.push('Source: ' + SRC);
     lines.push('Logged: ' + logged + ' plates (at meal ' + (cursor + 1) + ' of 14, cycle ' + cycleNum + ')');
     if (LOW.length) lines.push('Running low from logging: ' + LOW.join(', '));
     lines.push('Flags: ' + (r.sel.length ? r.sel.map(function(f){ return f.label; }).join(', ') : 'none picked'));
@@ -1211,7 +1222,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     // response resolves the moment the request is delivered and still rejects on a real network
     // failure, which is the only failure this page can honestly report.
     if (SHEET_URL){
-      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:email, price:'', flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
+      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:email, price:'', src:SRC, flags:r.sel.map(function(f){ return f.label; }).join(', '), summary:summary, recap:recap})})
         .then(function(){ note.textContent = 'We will write to ' + email + ' once, when a testing spot opens.'; })
         .catch(function(){ note.innerHTML = 'Something did not go through. <a href="mailto:hello@plateside.app">Contact us</a> and we will add you by hand.'; });
       note.textContent = 'Adding ' + email + '…';
@@ -1235,7 +1246,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
     b.classList.add('on');
     if (price && SHEET_URL){
       // A second row for the same email, marked as the follow-up it is.
-      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:signedEmail, price:price, followup:'price', flags:'', summary:'', recap:''})}).catch(function(){});
+      fetch(SHEET_URL, {method:'POST', mode:'no-cors', body: JSON.stringify({email:signedEmail, price:price, src:SRC, followup:'price', flags:'', summary:(SRC ? 'Source: ' + SRC : ''), recap:''})}).catch(function(){});
     }
     pn.textContent = price ? 'Noted, thank you. That reads as a gut feel, which is all we asked for.' : 'No problem.';
     pn.hidden = false;
