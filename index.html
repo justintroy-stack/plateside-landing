@@ -181,6 +181,10 @@ main > .band + .wrap{padding-top:0}
 .try-link .link-caption{font-size:12.5px; color:var(--ink-3); font-weight:500; text-decoration:none}
 .btn-ghost.try-link{text-decoration:none}
 .cta-row{display:flex; align-items:center; gap:var(--s5); flex-wrap:wrap; margin-top:var(--s6)}
+/* Says plainly what "early access" is (an email, once) rather than leaving the phrase to imply
+   something bigger -- Terry Lee's ask, unaddressed until now. flex-basis:100% drops it onto its
+   own line under both CTAs without adding a fourth stop to .hero-copy itself. */
+.cta-note{flex-basis:100%; margin:0; font-size:12.5px; color:var(--ink-3)}
 
 .card{background:var(--surface); border-radius:var(--r-lg); padding:var(--s6); box-shadow:var(--lift-1);
   position:relative; overflow:hidden}
@@ -301,18 +305,7 @@ input[type=email]:focus, select:focus{outline:2px solid var(--sprout-deep); outl
 #saved .row:first-child{padding-top:0; border:0}
 #saved .note{margin-top:var(--s3); padding:12px 14px; border-radius:var(--r-md); background:var(--sunk); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
 
-footer{padding:var(--s7) 0 var(--s9); position:relative; overflow:hidden}
-footer>*{position:relative; z-index:1}
-/* Footer close: a quiet aurora glow + slow-rising dots in the page's own signature colour,
-   ported from site-kit's vanilla footfx (no GSAP/Lenis involved -- those never loaded). Always
-   in the DOM like the grain overlay; the global reduced-motion rule collapses the animation. */
-.footfx{position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden}
-.footfx .aurora{position:absolute; left:-15%; right:-15%; bottom:-70%; height:230%;
-  background:radial-gradient(46% 64% at 28% 100%, var(--ember-deep), transparent 66%), radial-gradient(40% 56% at 72% 100%, var(--ember), transparent 66%);
-  filter:blur(52px); opacity:.22; animation:auroraDrift 16s ease-in-out infinite}
-@keyframes auroraDrift{0%,100%{transform:translateX(-4%) scaleY(1)} 50%{transform:translateX(4%) scaleY(1.18)}}
-.footfx .dot{position:absolute; bottom:6px; width:4px; height:4px; border-radius:50%; background:var(--ember-deep); opacity:0; box-shadow:0 0 10px var(--ember-deep); animation:dotRise linear infinite}
-@keyframes dotRise{0%{transform:translateY(0) scale(.4); opacity:0} 18%{opacity:.55} 80%{opacity:.3} 100%{transform:translateY(-88px) scale(1); opacity:0}}
+footer{padding:var(--s7) 0 var(--s9)}
 footer p{font-size:13px; color:var(--ink-3); line-height:1.5}
 footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:10px}
 /* ---------- desktop (>=900px): the page uses the width ---------------------------------
@@ -561,6 +554,7 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
               <span class="link-caption">stock runs low &rarr; the list fills in</span>
             </span>
           </a>
+          <p class="cta-note">One email, the moment it works on your real numbers. No incentive games.</p>
         </div>
       </div>
     </div>
@@ -748,25 +742,9 @@ footer .foot-row{display:flex; align-items:baseline; gap:var(--s4); margin-top:1
   // BUILD is a version marker for our own deploy checks against GitHub Pages' edge cache --
   // never rendered. Bump it on every push; confirm a push is live by re-fetching the raw source
   // and reading this line, not by looking at the page.
-  var BUILD = '33';
+  var BUILD = '34';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzkShKJS02VoVPfS_t6miAaNU6LKMZ6dSoQ3YlDYqGhII7Yq-bE4k5hO5unWiiesLwG/exec';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Footer close: aurora + a scatter of slowly rising dots, always injected (same discipline as
-  // the grain overlay) -- the global reduced-motion rule collapses the keyframe animations, no
-  // separate JS gate needed. Ported from site-kit's vanilla footfx; no GSAP/Lenis anywhere here.
-  document.querySelectorAll('footer').forEach(function(f){
-    var fx = document.createElement('div'); fx.className = 'footfx';
-    var aurora = document.createElement('div'); aurora.className = 'aurora'; fx.appendChild(aurora);
-    for (var i = 0; i < 20; i++){
-      var dot = document.createElement('div'); dot.className = 'dot';
-      dot.style.left = (4 + Math.random() * 92) + '%';
-      dot.style.animationDuration = (6 + Math.random() * 7).toFixed(1) + 's';
-      dot.style.animationDelay = (-Math.random() * 9).toFixed(1) + 's';
-      fx.appendChild(dot);
-    }
-    f.insertBefore(fx, f.firstChild);
-  });
 
   document.getElementById('ctaTop').addEventListener('click', function(){
     document.getElementById('signup').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
